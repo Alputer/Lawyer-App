@@ -1,0 +1,1 @@
+export const authController = require('./auth.controller');

@@ -20,7 +20,7 @@ export async function connect() {
 // const text = 'INSERT INTO users(name, email) VALUES($1, $2) RETURNING *'
 // const values = ['john', 'john.doe@gmail.com']
 
-export const query = async (text: string, params: Array<number> ) => {
+export const query = async (text: string, params: Array<string> ) => {
   const start = Date.now()
   const res = await pool.query(text, params)
   const duration = Date.now() - start

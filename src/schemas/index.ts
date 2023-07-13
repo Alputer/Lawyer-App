@@ -1,0 +1,1 @@
+export const createUserSchema = require('./auth.validation');
