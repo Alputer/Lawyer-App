@@ -1,15 +1,13 @@
-import { CreateUserInput } from "../schemas/auth.validation";
+import { CreateUserInput } from "../schemas/user.schemas";
 import { query } from "../utils/db";
-import { generateRegistrationTokens } from "../utils/jwt";
-import log from "../utils/logger";
+import { hashPassword } from "./auth.service";
 
-export async function createUser(input: CreateUserInput) {
+export async function createUser(input: CreateUserInput, verificationCode: string) {     
     
-    const user = await query('INSERT INTO lawyers (mail, password_hash, firstname, lastname) VALUES($1, $2, $3, $4)', [input.email, input.password, input.firstname, input.lastname]);
-    //log.info(user);
-    const tokens = generateRegistrationTokens({email: input.email});
-    log.info('entered here');
-    log.info('tokens: ', tokens);
-    
-    return {user, ...tokens};
+    const hashedPassword = await hashPassword(input.password)
+  
+    await query('INSERT INTO Lawyers (email, password_hash, firstname, lastname, verification_code) VALUES($1, $2, $3, $4, $5)', [input.email, hashedPassword, input.firstname, input.lastname, verificationCode]);
+    await query('INSERT INTO LawyerProfiles (email) VALUES ($1)', [input.email])
+  
+    return;
   }

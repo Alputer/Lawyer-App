@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { verifyJwt } from "../utils/jwt";
+import { verifyJwt } from "../services/token.service";
+
 const deserializeUser = async (
   req: Request,
   res: Response,

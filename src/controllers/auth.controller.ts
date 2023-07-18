@@ -1,43 +1,81 @@
 import { Request, Response } from 'express';
-import httpStatus from 'http-status';
-import { CreateUserInput } from '../schemas/auth.validation';
-import { authService, userService} from '../services';
-import log from "../utils/logger";
-import sendEmail from '../utils/mailer';
+import { authService, userService, tokenService, mailService} from '../services';
 
-/*
-const register = catchAsync(async (req: Request, res: Response) => {
-  const user = await userService.createUser(req.body);
-  const tokens = await tokenService.generateAuthTokens(user);
-  res.status(httpStatus.CREATED).send({ user, tokens });
-});
-*/
+const { v4: uuidv4 } = require('uuid');
 
-export async function register(
-  req: Request<{}, {}, CreateUserInput>,
+
+export async function login(
+  req: Request,
   res: Response
-) {
-  const body = req.body;
-  log.info(body);
+){
+
+  const body = req.body
 
   try {
-    const user = await userService.createUser(body);
-    
-    await sendEmail({
-      to: user.email,
-      from: "test@example.com",
-      subject: "Verify your email",
-      text: `verification code: ${user.verificationCode}. Id: ${user._id}`,
-    });
 
-    return res.status(httpStatus.CREATED).send("User successfully created");
+    const isMatch = await authService.comparePasswords({email: body.email, password: body.password});
 
-  } catch (e: any) {
-    log.info('entered here');
-    if (e.code === 11000) {
-      return res.status(409).send("Account already exists");
+    if(!isMatch){
+
+      return res.status(401).json({ message: 'Invalid credentials.' });
+
+    }   
+
+    const isVerified = await authService.isValidated(body.email)
+
+    if(!isVerified) {
+      res.status(403).json({ message: 'Account not validated. Please verify your email.' });
+      return;
     }
+  
+    const {accessToken, refreshToken} = tokenService.generateLoginTokens({email: body.email})  
 
+    res.cookie('refreshToken', refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'strict',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+  });
+
+    return res.status(200).json({message: 'Login successful.', accessToken: accessToken})
+
+  }
+
+  catch (e: any) {
+    console.log(e)
+    return res.status(500).send(e);
+  }
+}
+
+
+export async function sendVerificationEmail(
+  req: Request,
+  res: Response
+) {
+
+  const body = req.body
+  try {
+
+    const verificationCode = uuidv4()
+
+    const mailOptions = {
+      from: 'alp.tuna.453@gmail.com',
+      to: body.email,
+      subject: "Verify your email",
+      text: `verification code: ${verificationCode}.}`,
+    };
+    
+    await authService.saveVerificationCode({email: body.email, verificationCode: verificationCode});
+
+    await mailService.sendEmail(mailOptions);
+
+  
+    return res.status(200).json({
+      message: "Verification code has been sent successfully",
+    });
+  }
+  catch (e: any) {
+    console.log(e)
     return res.status(500).send(e);
   }
 }
@@ -84,14 +122,12 @@ const verifyEmail = catchAsync(async (req: Request, res: Response) => {
 */
 
 export default {
-  register,
-  /*
   login,
-  logout,
+  sendVerificationEmail,
+  /*
   refreshTokens,
   forgotPassword,
   resetPassword,
-  sendVerificationEmail,
   verifyEmail,
   */
 };

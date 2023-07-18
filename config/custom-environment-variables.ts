@@ -3,4 +3,5 @@ export default {
     accessTokenPublicKey: "ACCESS_TOKEN_PUBLIC_KEY",
     refreshTokenPrivateKey: "REFRESH_PRIVATE_KEY",
     refreshTokenPublicKey: "REFRESH_PUBLIC_KEY",
+    emailPassword: "EMAIL_PASSWORD",
   };

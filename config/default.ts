@@ -10,12 +10,7 @@ export default {
       },
     accessTokenPrivateKey: "",
     refreshTokenPrivateKey: "",
-    smtp: {
-        user: "icqskc5mxzf3bwct@ethereal.email",
-        pass: "mVSU79SbF3WmvGqy4V",
-        host: "smtp.ethereal.email",
-        port: 587,
-        secure: false,
-      },
+    accessTokenExpiresIn: "15m",
+    refreshTokenExpiresIn: "7d",
     //dbUri: "postgres://localhost:27017/rest-api-tutorial",
 };

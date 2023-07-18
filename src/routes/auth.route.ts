@@ -1,19 +1,17 @@
 import express from 'express';
-import createUserSchema from '../schemas/auth.validation';
+import {authSchemas} from '../schemas';
 import authController from '../controllers/auth.controller';
-import requireUser from "../middlewares/requireUser";
 import validateResource from "../middlewares/validateResource";
+import requireRegistration from '../middlewares/requireRegistration';
 
 const router = express.Router();
 
-router.post('/register', validateResource(createUserSchema), authController.register);
+router.post('/login', validateResource(authSchemas.loginSchema), requireRegistration(), authController.login);
+router.post('/send-verification-email', validateResource(authSchemas.sendVerificationEmailSchema), requireRegistration(), authController.sendVerificationEmail);
 /*
-router.post('/login', validate(authValidation.login), authController.login);
-router.post('/logout', validate(authValidation.logout), authController.logout);
 router.post('/refresh-tokens', validate(authValidation.refreshTokens), authController.refreshTokens);
 router.post('/forgot-password', validate(authValidation.forgotPassword), authController.forgotPassword);
 router.post('/reset-password', validate(authValidation.resetPassword), authController.resetPassword);
-router.post('/send-verification-email', auth(), authController.sendVerificationEmail);
 router.post('/verify-email', validate(authValidation.verifyEmail), authController.verifyEmail);
 */
 

@@ -1,26 +1,21 @@
 import jwt from "jsonwebtoken";
 import config from "config";
-import { access } from "fs";
-import log from "./logger";
-
-interface RegistrationTokenPayload {
-    email: string;
-  }
+import {LoginInput} from "../schemas/auth.schemas";
   
-  export function generateRegistrationTokens(payload: RegistrationTokenPayload): object {
-    const accessTokenPrivateKey = config.get<string>("accessTokenPrivateKey")
-    const refreshTokenPrivateKey = config.get<string>("refreshTokenPrivateKey")
+  export function generateLoginTokens(payload: LoginInput): { accessToken: string; refreshToken: string } {
+  
+      const accessTokenExpiresIn = config.get<string>("accessTokenExpiresIn");
+      const refreshTokenExpiresIn = config.get<string>("refreshTokenExpiresIn");
 
-    const expiresIn = config.get<string>("registrationTokenExpiration");
-    log.info('entered here');
-    const accessToken = jwt.sign(payload, accessTokenPrivateKey, { expiresIn });
-    const refreshToken = jwt.sign(payload, refreshTokenPrivateKey, { expiresIn });
-    log.info('accessToken: ', accessToken);
-    return {accessToken, refreshToken};
+      const accessToken = signJwt(payload, "accessTokenPrivateKey", { expiresIn: accessTokenExpiresIn });
+      const refreshToken = signJwt(payload, "refreshTokenPrivateKey", { expiresIn: refreshTokenExpiresIn });
+
+      return {accessToken: accessToken, refreshToken: refreshToken}; 
+
   }
 
 export function signJwt(
-  object: Object,
+  object: Object, // our payload
   keyName: "accessTokenPrivateKey" | "refreshTokenPrivateKey",
   options?: jwt.SignOptions | undefined
 ) {
@@ -31,7 +26,6 @@ export function signJwt(
 
   return jwt.sign(object, signingKey, {
     ...(options && options),
-    algorithm: "RS256",
   });
 }
 

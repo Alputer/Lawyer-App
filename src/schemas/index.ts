@@ -1,1 +1,2 @@
-export const createUserSchema = require('./auth.validation');
+export const authSchemas = require('./auth.schemas');
+export const userSchemas = require('./user.schemas');

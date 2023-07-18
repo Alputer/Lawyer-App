@@ -23,6 +23,7 @@ export async function connect() {
 export const query = async (text: string, params: Array<string> ) => {
   const start = Date.now()
   const res = await pool.query(text, params)
+  logger.info('res.rows', res.rows)
   const duration = Date.now() - start
   logger.info('executed query', { text, duration, rows: res.rowCount })
   return res

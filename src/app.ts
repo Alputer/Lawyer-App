@@ -4,7 +4,7 @@ dotenv.config();
 import config from "config";
 import logger from "./utils/logger";
 import {connect} from "./utils/db";
-import index from './routes/index';
+import router from './routes';
 import deserializeUser from "./middlewares/deserializeUser";
 
 const port = config.get<number>("port");
@@ -15,7 +15,7 @@ app.use(express.json());
 
 app.use(deserializeUser);
 
-app.use('/api', index);
+app.use('/api', router);
 
 app.listen(port, async () => {
     
