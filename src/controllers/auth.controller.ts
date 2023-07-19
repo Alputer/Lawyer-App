@@ -37,7 +37,7 @@ export async function login(
     sameSite: 'strict',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
   });
-
+    console.log(accessToken);
     return res.status(200).json({message: 'Login successful.', accessToken: accessToken})
 
   }
@@ -95,7 +95,7 @@ export async function verifyEmail(
 
       await authService.makeUserVerified(email);
       return res.status(200).json({ message: 'Email verified successfully!' });
-      
+
     }
     else {
       return res.status(400).json({ error: 'Invalid email or verification code.' });
@@ -113,16 +113,16 @@ export async function refreshToken(
   res: Response
 )  {
   try{
-    if (req.cookies?.jwt) {
+    if (req.cookies?.refreshToken) {
   
       // Destructuring refreshToken from cookie
-      const refreshToken = req.cookies.jwt;
-  
+      const refreshToken = req.cookies.refreshToken;
+      console.log("refreshToken: ", refreshToken);
       // Verifying refresh token
-      const decoded = tokenService.verifyJwt(refreshToken, "refreshTokenPublicKey");
+      const {decoded} = tokenService.verifyJwt(refreshToken, "refreshTokenPrivateKey");
   
       if(!decoded){
-          // Wrong Refesh Token
+          // Wrong Refresh Token
           return res.status(406).json({ message: 'Unauthorized' });
       }
   
@@ -196,7 +196,7 @@ export async function resetPassword(
     const { email, newPassword, resetToken } = req.body;
 
     // Check if the reset token matches the one saved in the database for the user
-    const actualResetToken = tokenService.getResetToken(email);
+    const actualResetToken = await tokenService.getResetToken(email);
     if (actualResetToken !== resetToken) {
       res.status(401).json({ error: 'Invalid reset token.' });
       return;

@@ -1,4 +1,9 @@
-import { object, string, TypeOf } from "zod";
+import { z, object, string, number, TypeOf} from "zod";
+
+
+const phoneRegex = new RegExp(
+  /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
+);
 
 const createUserSchema = object({
     body: object({
@@ -23,9 +28,26 @@ const createUserSchema = object({
     }),
   });
 
+  const phoneNumberSchema = z.string().regex(/^\+\d{1,3}\d{4,14}$/).refine((value) => {
+    return /\d/.test(value); // Ensuring the phone number contains at least one digit
+  }, {
+    message: 'Invalid phone number format. Should be in the format: "+{country_code}{phone_number}"',
+  })
+
+  const updateProfileSchema = object({
+    body: object({
+      email: string({
+        required_error: "Email is required",
+      }).email("Not a valid email"),
+      age: number().min(18).max(100).nullable().optional(),
+      phoneNumber: string().regex(phoneRegex).nullable().optional(),
+      linkedinUrl: string().url().nullable().optional(),
+    }),
+  });
+
 export type CreateUserInput = Omit<
 TypeOf<typeof createUserSchema>["body"],
 "passwordConfirmation"
 >;
 
-export default {createUserSchema};
+export default {createUserSchema, updateProfileSchema};

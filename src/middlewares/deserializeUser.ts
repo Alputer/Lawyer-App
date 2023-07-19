@@ -15,8 +15,8 @@ const deserializeUser = async (
     return next();
   }
 
-  const decoded = verifyJwt(accessToken, "accessTokenPublicKey");
-
+  const {decoded} = verifyJwt(accessToken, "accessTokenPrivateKey");
+  
   if (decoded) {
     res.locals.user = decoded;
   }

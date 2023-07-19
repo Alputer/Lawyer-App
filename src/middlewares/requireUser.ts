@@ -5,7 +5,9 @@ const requireUser = () =>
   const user = res.locals.user;
 
   if (!user) {
-    return res.sendStatus(403);
+    return res.status(403).json({
+      error: 'You need a access token',
+    });
   }
 
   return next();

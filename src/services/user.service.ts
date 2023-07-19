@@ -11,3 +11,15 @@ export async function createUser(input: CreateUserInput, verificationCode: strin
   
     return;
   }
+
+  export async function updateProfile(email: string, age: string | null | undefined, phoneNumber: string | null | undefined, linkedinUrl: string | null | undefined) {     
+    
+    if(typeof age !== 'undefined')
+    await query('UPDATE LawyerProfiles SET age = $1 WHERE email = $2', [age as string | null, email]);
+    if(typeof phoneNumber !== 'undefined')
+    await query('UPDATE LawyerProfiles SET phone_number = $1 WHERE email = $2', [phoneNumber as string | null, email]);
+    if(typeof linkedinUrl !== 'undefined')
+    await query('UPDATE LawyerProfiles SET linkedin_url = $1 WHERE email = $2', [linkedinUrl as string | null, email]);
+  
+    return;
+  }
