@@ -1,7 +1,8 @@
 import express from 'express';
-import {userSchemas} from '../schemas';
+import userSchemas from '../schemas/user.schemas';
 import userController from '../controllers/user.controller';
 import validateResource from "../middlewares/validateResource";
+
 
 const router = express.Router();
 

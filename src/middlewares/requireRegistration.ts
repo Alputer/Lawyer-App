@@ -6,9 +6,9 @@ const requireRegistration =
 async (req: Request, res: Response, next: NextFunction) => {
 
   const email = req.body.email;
-
+  
   const queryResult = await query('SELECT * FROM Lawyers L WHERE L.email = $1', [email]);
-
+  
   const doesUserExist = queryResult.rowCount == 1;
 
   if (!doesUserExist) {

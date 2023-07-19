@@ -19,7 +19,7 @@ export async function register(
         from: 'alp.tuna.453@gmail.com',
         to: body.email,
         subject: "Verify your email",
-        text: `verification code: ${verificationCode}.}`,
+        text: `verification code: ${verificationCode}`,
   
       };
   
@@ -35,7 +35,9 @@ export async function register(
     } catch (e: any) {
       
       if (e.code === "23505") {
-        return res.status(409).send("Account already exists");
+        return res.status(409).json({
+          message: "Account already exists",
+        });
       }
       console.log(e)
       return res.status(500).send(e);

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { authService, userService, tokenService, mailService} from '../services';
+import { query } from '../utils/db';
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -62,7 +63,7 @@ export async function sendVerificationEmail(
       from: 'alp.tuna.453@gmail.com',
       to: body.email,
       subject: "Verify your email",
-      text: `verification code: ${verificationCode}.}`,
+      text: `verification code: ${verificationCode}`,
     };
     
     await authService.saveVerificationCode({email: body.email, verificationCode: verificationCode});
@@ -80,54 +81,148 @@ export async function sendVerificationEmail(
   }
 }
 
-/*
-const login = catchAsync(async (req: Request, res: Response) => {
-  const { email, password } = req.body;
-  const user = await authService.loginUserWithEmailAndPassword(email, password);
-  const tokens = await tokenService.generateAuthTokens(user);
-  res.send({ user, tokens });
-});
+export async function verifyEmail(
+  req: Request,
+  res: Response
+)  {
+  const { email, verificationCode } = req.body;
 
-const logout = catchAsync(async (req: Request, res: Response) => {
-  await authService.logout(req.body.refreshToken);
-  res.status(httpStatus.NO_CONTENT).send();
-});
+  try {
 
-const refreshTokens = catchAsync(async (req: Request, res: Response) => {
-  const tokens = await authService.refreshAuth(req.body.refreshToken);
-  res.send({ ...tokens });
-});
+    const isVerificationCodeCorrect = await authService.checkVerificationCode(email, verificationCode);
+    
+    if(isVerificationCodeCorrect){
 
-const forgotPassword = catchAsync(async (req: Request, res: Response) => {
-  const resetPasswordToken = await tokenService.generateResetPasswordToken(req.body.email);
-  await emailService.sendResetPasswordEmail(req.body.email, resetPasswordToken);
-  res.status(httpStatus.NO_CONTENT).send();
-});
+      await authService.makeUserVerified(email);
+      return res.status(200).json({ message: 'Email verified successfully!' });
+      
+    }
+    else {
+      return res.status(400).json({ error: 'Invalid email or verification code.' });
+    }
+      
+    } 
+    catch (err) {
+      console.error('Error verifying email:', err);
+      return res.status(500).json({ error: 'Internal Server Error' });
+    }
+}
 
-const resetPassword = catchAsync(async (req: Request, res: Response) => {
-  await authService.resetPassword(req.query.token as string, req.body.password);
-  res.status(httpStatus.NO_CONTENT).send();
-});
+export async function refreshToken(
+  req: Request,
+  res: Response
+)  {
+  try{
+    if (req.cookies?.jwt) {
+  
+      // Destructuring refreshToken from cookie
+      const refreshToken = req.cookies.jwt;
+  
+      // Verifying refresh token
+      const decoded = tokenService.verifyJwt(refreshToken, "refreshTokenPublicKey");
+  
+      if(!decoded){
+          // Wrong Refesh Token
+          return res.status(406).json({ message: 'Unauthorized' });
+      }
+  
+      const accessToken = tokenService.signJwt(req.body.email, "accessTokenPrivateKey");
+  
+      return res.status(200).json({ accessToken });
+  
+  } else {
+      return res.status(406).json({ message: 'Unauthorized' });
+  }
 
-const sendVerificationEmail = catchAsync(async (req: Request, res: Response) => {
-  const verifyEmailToken = await tokenService.generateVerifyEmailToken(req.user);
-  await emailService.sendVerificationEmail(req.user.email, verifyEmailToken);
-  res.status(httpStatus.NO_CONTENT).send();
-});
+  } catch (error) {
+    console.error('Error while getting access token:', error);
+    res.status(500).json({ error: 'An internal server error occurred.' });
+  }
 
-const verifyEmail = catchAsync(async (req: Request, res: Response) => {
-  await authService.verifyEmail(req.query.token as string);
-  res.status(httpStatus.NO_CONTENT).send();
-});
-*/
+}
+
+export async function updatePassword(
+  req: Request,
+  res: Response
+)  {
+  try {
+    const { email, newPassword } = req.body;
+
+    await authService.changePassword(email, newPassword);
+
+    res.status(200).json({ message: 'Password update successful.' });
+
+  } catch (error) {
+    console.error('Error updating password:', error);
+    res.status(500).json({ error: 'An internal server error occurred.' });
+  }
+}
+
+export async function forgotPassword(
+  req: Request,
+  res: Response
+)  {
+  try {
+    const { email } = req.body;
+
+    // Generate a password reset token and save it in the database
+    const resetToken = await tokenService.generateAndSaveResetToken(email);
+
+    // Send the reset token to the user's email address
+    const mailOptions = {
+      from: 'alp.tuna.453@gmail.com',
+      to: email,
+      subject: "Verify your email",
+      text: `Reset Token: ${resetToken}`,
+    };
+
+    await mailService.sendEmail(mailOptions);
+
+    res.json({ message: 'Password reset token sent to the email address.' });
+  } catch (error) {
+
+    console.error('Error sending reset token:', error);
+    res.status(500).json({ error: 'An internal server error occurred.' });
+
+  }
+}
+
+export async function resetPassword(
+  req: Request,
+  res: Response
+)  {
+
+  try {
+    const { email, newPassword, resetToken } = req.body;
+
+    // Check if the reset token matches the one saved in the database for the user
+    const actualResetToken = tokenService.getResetToken(email);
+    if (actualResetToken !== resetToken) {
+      res.status(401).json({ error: 'Invalid reset token.' });
+      return;
+    }
+
+    // Update the user's password and clear the reset token fields in the database
+    await authService.changePassword(email, newPassword);
+    await tokenService.deleteResetToken(email);
+
+
+    res.status(200).json({ message: 'Password reset successful.' });
+
+  } catch (error) {
+    console.error('Error resetting password:', error);
+    res.status(500).json({ error: 'An internal server error occurred.' });
+  }
+
+}
+
 
 export default {
   login,
   sendVerificationEmail,
-  /*
-  refreshTokens,
+  verifyEmail,
+  refreshToken,
+  updatePassword,
   forgotPassword,
   resetPassword,
-  verifyEmail,
-  */
 };

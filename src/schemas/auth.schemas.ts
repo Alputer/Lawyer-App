@@ -19,6 +19,58 @@ import { object, string} from "zod";
     })
   });
 
+  const verifyEmailSchema = object({
+    body: object({
+      email: string({
+        required_error: "Email is required",
+      }).email("Not a valid email"),
+      verificationCode: string({
+        required_error: "Verification Code is required",
+      }),
+    })
+  });
+
+  const refreshTokenSchema = object({
+    body: object({
+      email: string({
+        required_error: "Email is required",
+      }).email("Not a valid email"),
+    })
+  });
+
+  const updatePasswordSchema = object({
+    body: object({
+      email: string({
+        required_error: "Email is required",
+      }).email("Not a valid email"),
+      newPassword: string({
+        required_error: "New password is required",
+      }),
+    })
+  });
+
+  const forgotPasswordSchema = object({
+    body: object({
+      email: string({
+        required_error: "Email is required",
+      }).email("Not a valid email"),
+    })
+  });
+
+  const resetPasswordSchema = object({
+    body: object({
+      email: string({
+        required_error: "Email is required",
+      }).email("Not a valid email"),
+      newPassword: string({
+        required_error: "New password is required",
+      }),
+      resetToken: string({
+        required_error: "Reset token is required",
+      }),
+    })
+  });
+
 export type LoginInput = {
   email: string;
 };
@@ -28,4 +80,4 @@ export type SaveVerificationCodeInput = {
   verificationCode: string;
 };
 
-export default {loginSchema, sendVerificationEmailSchema};
+export default {loginSchema, sendVerificationEmailSchema, refreshTokenSchema, updatePasswordSchema, forgotPasswordSchema, resetPasswordSchema, verifyEmailSchema};

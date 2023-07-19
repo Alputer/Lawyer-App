@@ -1,6 +1,8 @@
 import jwt from "jsonwebtoken";
 import config from "config";
 import {LoginInput} from "../schemas/auth.schemas";
+import { query } from "../utils/db";
+const crypto = require('crypto');
   
   export function generateLoginTokens(payload: LoginInput): { accessToken: string; refreshToken: string } {
   
@@ -12,6 +14,22 @@ import {LoginInput} from "../schemas/auth.schemas";
 
       return {accessToken: accessToken, refreshToken: refreshToken}; 
 
+  }
+
+  export async function generateAndSaveResetToken(email: string){
+    const tokenLength = 24;
+    const resetToken = crypto.randomBytes(tokenLength).toString('hex');
+    await query('UPDATE Lawyers SET reset_token = $1 WHERE email = $2', [resetToken, email]);
+    return resetToken;
+  }
+
+  export const getResetToken = async(email: string): Promise<void> => {
+    const queryResult = await query('SELECT reset_token FROM Lawyers WHERE email = $1', [email]);
+    return queryResult.rows[0].reset_token;
+  }
+  export const deleteResetToken = async(email: string): Promise<void> => {
+    await query('UPDATE Lawyers SET reset_token = NULL WHERE email = $1', [email]);
+    return;
   }
 
 export function signJwt(
