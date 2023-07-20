@@ -45,9 +45,24 @@ const createUserSchema = object({
     }),
   });
 
+  const rateLawyerSchema = object({
+    body: object({
+      rater_email: string({
+        required_error: "Rater email is required",
+      }).email("Not a valid rater email"),
+      rated_email: string({
+        required_error: "Rated email is required",
+      }).email("Not a valid rated email"),
+      rating: number({
+        required_error: "Rating is required",
+      }).int().min(1).max(5),
+
+    }),
+  });
+
 export type CreateUserInput = Omit<
 TypeOf<typeof createUserSchema>["body"],
 "passwordConfirmation"
 >;
 
-export default {createUserSchema, updateProfileSchema};
+export default {createUserSchema, updateProfileSchema, rateLawyerSchema};

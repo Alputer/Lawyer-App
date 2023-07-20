@@ -58,8 +58,41 @@ export async function register(
     }
   }
 
+  export async function rateLawyer(
+    req: Request,
+    res: Response
+  ) {
+    try{
+      const {rater_email, rated_email, rating} = req.body;
+
+      if(rater_email === rated_email){
+        return res.status(400).json({
+          message: "Lawyer cannot rate himself",
+        })
+      }
+
+      await userService.rateLawyer(rater_email, rated_email, rating);
+
+      return res.status(200).json({
+        message: "Lawyer is successfully rated",
+      });
+
+    } catch (e: any) {
+      
+      if (e.code === "23505") {
+        return res.status(400).json({
+          message: "Lawyer already rated this lawyer",
+        });
+      }
+
+      console.error('Error rating lawyer:', e);
+      res.status(500).json({ error: 'An internal server error occurred.' });
+    }
+  }
+
 
   export default {
     register,
     updateProfile,
+    rateLawyer,
   };

@@ -37,7 +37,7 @@ export async function login(
     sameSite: 'strict',
     maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
   });
-    console.log(accessToken);
+    
     return res.status(200).json({message: 'Login successful.', accessToken: accessToken})
 
   }

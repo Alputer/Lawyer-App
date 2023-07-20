@@ -12,7 +12,8 @@ const validateResource =
       });
       next();
     } catch (e: any) {
-      return res.status(400).send(e.errors);
+      console.log(e);
+      return res.status(400).json({ message: "Invalid schema", error: e.errors });
     }
   };
 

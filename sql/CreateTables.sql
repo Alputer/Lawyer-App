@@ -48,14 +48,14 @@ CREATE TABLE IF NOT EXISTS LawyerProfiles (
 );
 
 CREATE TABLE IF NOT EXISTS Rates (
-	rated_by VARCHAR(255),
-	rated VARCHAR(255),
+	rater_email VARCHAR(255),
+	rated_email VARCHAR(255),
 	rating INTEGER NOT NULL,
-	PRIMARY KEY (rated_by, rated),
-	FOREIGN KEY (rated_by) REFERENCES Lawyers(email)
+	PRIMARY KEY (rater_email, rated_email),
+	FOREIGN KEY (rater_email) REFERENCES Lawyers(email)
 	ON DELETE SET NULL 
 	ON UPDATE CASCADE,
-	FOREIGN KEY (rated) REFERENCES Lawyers(email)
+	FOREIGN KEY (rated_email) REFERENCES Lawyers(email)
 	ON DELETE CASCADE
 	ON UPDATE CASCADE
 );

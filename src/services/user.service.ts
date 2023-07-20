@@ -6,7 +6,7 @@ export async function createUser(input: CreateUserInput, verificationCode: strin
     
     const hashedPassword = await hashPassword(input.password)
   
-    await query('INSERT INTO Lawyers (email, password_hash, firstname, lastname, verification_code) VALUES($1, $2, $3, $4, $5)', [input.email, hashedPassword, input.firstname, input.lastname, verificationCode]);
+    await query('INSERT INTO Lawyers (email, password_hash, firstname, lastname, verification_code) VALUES ($1, $2, $3, $4, $5)', [input.email, hashedPassword, input.firstname, input.lastname, verificationCode]);
     await query('INSERT INTO LawyerProfiles (email) VALUES ($1)', [input.email])
   
     return;
@@ -20,6 +20,13 @@ export async function createUser(input: CreateUserInput, verificationCode: strin
     await query('UPDATE LawyerProfiles SET phone_number = $1 WHERE email = $2', [phoneNumber as string | null, email]);
     if(typeof linkedinUrl !== 'undefined')
     await query('UPDATE LawyerProfiles SET linkedin_url = $1 WHERE email = $2', [linkedinUrl as string | null, email]);
+  
+    return;
+  }
+
+  export async function rateLawyer(rater_email: string, rated_email: string, rating: number) {     
+    
+    await query('INSERT INTO Rates (rater_email, rated_email, rating) VALUES ($1, $2, $3)', [rater_email, rated_email, rating.toString()]);
   
     return;
   }
