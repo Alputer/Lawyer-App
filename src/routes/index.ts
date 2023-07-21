@@ -1,6 +1,8 @@
 import express from 'express';
 import authRoute from './auth.route';
 import userRoute from './user.route';
+import locationRoute from './location.route';
+import barRoute from './bar.route';
 
 const router = express.Router();
 
@@ -18,6 +20,16 @@ const defaultRoutes: Route[] = [
   {
     path: '/',
     route: userRoute,
+  },
+
+  {
+    path: '/',
+    route: locationRoute,
+  },
+
+  {
+    path: '/',
+    route: barRoute,
   },
   
 ];
