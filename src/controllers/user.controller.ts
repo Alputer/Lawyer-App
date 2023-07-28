@@ -90,9 +90,28 @@ export async function register(
     }
   }
 
+  export async function getAvailableLawyers(
+    req: Request,
+    res: Response
+  ) {
+  
+    try {
+        
+        const {barId} = req.params
+        const available_lawyers = await userService.getAvailableLawyers(barId);
+        
+        return res.status(200).json({available_lawyers: available_lawyers});
+
+    } catch (e: any) {
+        console.error('Error getting available lawyers in the bar:', e);
+        res.status(500).json({ error: 'An internal server error occurred.' });
+      }
+    }
+
 
   export default {
     register,
     updateProfile,
     rateLawyer,
+    getAvailableLawyers,
   };

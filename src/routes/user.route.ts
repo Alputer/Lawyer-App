@@ -11,6 +11,7 @@ const router = express.Router();
 router.post('/register', validateResource(userSchemas.createUserSchema), userController.register);
 router.put('/update-profile', validateResource(userSchemas.updateProfileSchema), requireRegistration({userEmailField: "email"}), requireUser(), userController.updateProfile);
 router.post('/rate-lawyer', validateResource(userSchemas.rateLawyerSchema), requireRegistration({userEmailField: "rater_email"}), requireRegistration({userEmailField: "rated_email"}), requireUser(), userController.rateLawyer);
+router.get('/available-lawyers/:barId', validateResource(userSchemas.getAvailableLawyersSchema), requireUser(), userController.getAvailableLawyers);
 
 
 

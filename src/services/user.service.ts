@@ -30,3 +30,18 @@ export async function createUser(input: CreateUserInput, verificationCode: strin
   
     return;
   }
+
+  export async function getAvailableLawyers(barId: string) {
+    const queryResult = await query('SELECT (email, firstname, lastname) FROM Lawyers WHERE bar_id = $1 AND lawyer_state = \'free\'', [barId]);
+    
+    const available_lawyers = queryResult.rows.map(available_lawyer => {
+      const items = available_lawyer.row.split(',');
+      return {email: items[0].slice(1),
+             firstname: items[1],
+             lastname: items[2].slice(0, -1),
+            };
+        } 
+      );
+
+    return available_lawyers;
+  }
