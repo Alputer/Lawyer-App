@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { authService, userService, tokenService, mailService} from '../services';
+import { authService, userService, barService, mailService} from '../services';
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -98,6 +98,12 @@ export async function register(
     try {
         
         const {barId} = req.params
+
+        const barExists = await barService.barExists(barId);
+        if(!barExists){
+          return res.status(404).json({ error: `Bar with id '${barId}' could not found` });
+        }
+
         const available_lawyers = await userService.getAvailableLawyers(barId);
         
         return res.status(200).json({available_lawyers: available_lawyers});
@@ -108,10 +114,35 @@ export async function register(
       }
     }
 
+    export async function getUserProfile(
+      req: Request,
+      res: Response
+    ) {
+    
+      try {
+          
+          const {userEmail} = req.params
+
+          const userExists = await userService.userExists(userEmail);
+          if(!userExists){
+            return res.status(404).json({ error: 'User not found' });
+          }
+
+          const user_profile = await userService.getUserProfile(userEmail);
+            
+          return res.status(200).json({user_profile: user_profile});
+  
+      } catch (e: any) {
+          console.error('Error getting user profile:', e);
+          res.status(500).json({ error: 'An internal server error occurred.' });
+        }
+      }
+
 
   export default {
     register,
     updateProfile,
     rateLawyer,
     getAvailableLawyers,
+    getUserProfile,
   };

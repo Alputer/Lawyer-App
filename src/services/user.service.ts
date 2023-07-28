@@ -2,6 +2,11 @@ import { CreateUserInput } from "../schemas/user.schemas";
 import { query } from "../utils/db";
 import { hashPassword } from "./auth.service";
 
+export async function userExists(userEmail: string){
+  const queryResult = await query("SELECT * FROM Lawyers WHERE email = $1", [userEmail]);
+  return queryResult.rowCount > 0
+}
+
 export async function createUser(input: CreateUserInput, verificationCode: string) {     
     
     const hashedPassword = await hashPassword(input.password)
@@ -32,7 +37,7 @@ export async function createUser(input: CreateUserInput, verificationCode: strin
   }
 
   export async function getAvailableLawyers(barId: string) {
-    const queryResult = await query('SELECT (email, firstname, lastname) FROM Lawyers WHERE bar_id = $1 AND lawyer_state = \'free\'', [barId]);
+    const queryResult = await query("SELECT (email, firstname, lastname) FROM Lawyers WHERE bar_id = $1 AND lawyer_state = 'free'", [barId]);
     
     const available_lawyers = queryResult.rows.map(available_lawyer => {
       const items = available_lawyer.row.split(',');
@@ -44,4 +49,16 @@ export async function createUser(input: CreateUserInput, verificationCode: strin
       );
 
     return available_lawyers;
+  }
+
+  export async function getUserProfile(userEmail: string) {
+    const queryResult = await query("SELECT * FROM LawyerProfiles WHERE email = $1", [userEmail]);
+    
+    const user_profile= {
+      age: queryResult.rows[0].age,
+      phone_number: queryResult.rows[0].phone_number,
+      linkedin_url: queryResult.rows[0].linkedin_url,
+    }
+
+    return user_profile;
   }
