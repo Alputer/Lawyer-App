@@ -5,3 +5,4 @@ export const barService = require('./bar.service');
 export const tokenService = require('./token.service');
 export const mailService = require('./mail.service');
 export const searchService = require('./search.service');
+export const jobService = require('./job.service');
