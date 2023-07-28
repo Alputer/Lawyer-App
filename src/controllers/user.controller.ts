@@ -138,6 +138,33 @@ export async function register(
         }
       }
 
+      export async function getCityOfTheUser(
+        req: Request,
+        res: Response
+      ) {
+      
+        try {
+            
+          const userEmail = res.locals.user.email;
+  
+            const userExists = await userService.userExists(userEmail);
+            if(!userExists){
+              return res.status(404).json({ error: 'User not found' });
+            }
+  
+            const user_location = await userService.getUserLocation(userEmail);
+            if(!user_location){
+              return res.status(404).json({ error: 'User has no registered city' });
+            }
+
+            return res.status(200).json({user_location: user_location});
+    
+        } catch (e: any) {
+            console.error("Error getting user's city", e);
+            res.status(500).json({ error: 'An internal server error occurred.' });
+          }
+        }
+
 
   export default {
     register,
@@ -145,4 +172,5 @@ export async function register(
     rateLawyer,
     getAvailableLawyers,
     getUserProfile,
+    getCityOfTheUser,
   };

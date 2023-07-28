@@ -62,3 +62,11 @@ export async function createUser(input: CreateUserInput, verificationCode: strin
 
     return user_profile;
   }
+
+  export async function getUserLocation(userEmail: string) {
+    const queryResult = await query("SELECT C.city_name From Cities C, Lawyers L WHERE L.email = $1 AND L.last_location = C.city_id", [userEmail]);
+    
+    const user_location = queryResult.rows[0]?.city_name;
+
+    return user_location;
+  }

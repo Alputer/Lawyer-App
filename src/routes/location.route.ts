@@ -9,6 +9,7 @@ import requireUser from '../middlewares/requireUser';
 const router = express.Router();
 
 router.get('/cities', requireUser(), locationController.getCities);
+router.get('/city/me', requireUser(), locationController.getCities);
 
 
 export default router;
