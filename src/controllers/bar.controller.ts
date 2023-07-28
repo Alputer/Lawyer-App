@@ -10,11 +10,11 @@ export async function getBarsInTheCity(
         
         const {cityId} = req.params
 
-        const cityExists = await locationService.cityExists(cityId);
+        const cityExists = await locationService.cityWithIdExists(cityId);
         if(!cityExists){
           return res.status(404).json({ error: `City with id '${cityId}' could not found` });
         }
-        
+
         const bars = await barService.getBars(cityId);
         
         return res.status(200).json({bars: bars});

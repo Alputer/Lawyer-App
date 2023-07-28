@@ -1,7 +1,12 @@
 import { query } from "../utils/db";
 
-export async function cityExists(cityId: string){
+export async function cityWithIdExists(cityId: string){
   const queryResult = await query("SELECT * FROM Cities WHERE city_id = $1", [cityId]);
+  return queryResult.rowCount > 0
+}
+
+export async function cityWithNameExists(cityName: string){
+  const queryResult = await query("SELECT * FROM Cities WHERE city_name = $1", [cityName]);
   return queryResult.rowCount > 0
 }
 

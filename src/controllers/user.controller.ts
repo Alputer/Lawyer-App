@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { authService, userService, barService, mailService} from '../services';
+import {userService, barService, mailService, locationService} from '../services';
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -146,16 +146,11 @@ export async function register(
         try {
             
           const userEmail = res.locals.user.email;
-  
-            const userExists = await userService.userExists(userEmail);
-            if(!userExists){
-              return res.status(404).json({ error: 'User not found' });
-            }
-  
-            const user_location = await userService.getUserLocation(userEmail);
-            if(!user_location){
-              return res.status(404).json({ error: 'User has no registered city' });
-            }
+
+          const user_location = await userService.getUserLocation(userEmail);
+          if(!user_location){
+            return res.status(404).json({ error: 'User has no registered city' });
+          }
 
             return res.status(200).json({user_location: user_location});
     
@@ -165,6 +160,33 @@ export async function register(
           }
         }
 
+        export async function updateCityOfTheUser(
+          req: Request,
+          res: Response
+        ) {
+        
+          try {
+            
+            const userEmail = res.locals.user.email;
+            const { cityName } = req.params;
+            
+            const cityExists = await locationService.cityWithNameExists(cityName);
+            if(!cityExists){
+              return res.status(404).json({ error: `City with name '${cityName}' could not found` });
+            }
+    
+              await userService.updateUserLocation(userEmail, cityName);
+  
+              return res.status(200).json({
+                message: "User's location is successfully updated",
+              });
+      
+          } catch (e: any) {
+              console.error("Error updating user's city", e);
+              res.status(500).json({ error: 'An internal server error occurred.' });
+            }
+          }
+
 
   export default {
     register,
@@ -173,4 +195,5 @@ export async function register(
     getAvailableLawyers,
     getUserProfile,
     getCityOfTheUser,
+    updateCityOfTheUser,
   };

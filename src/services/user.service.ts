@@ -70,3 +70,9 @@ export async function createUser(input: CreateUserInput, verificationCode: strin
 
     return user_location;
   }
+
+  export async function updateUserLocation(userEmail: string, cityName: string) {
+
+    await query('UPDATE Lawyers SET last_location = (SELECT city_id FROM Cities WHERE city_name = $1) WHERE email = $2', [cityName, userEmail]);
+    return;
+  }
