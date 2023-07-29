@@ -4,6 +4,7 @@ import userRoute from './user.route';
 import locationRoute from './location.route';
 import barRoute from './bar.route';
 import jobRoute from './job.route';
+import offerRoute from './offer.route';
 
 const router = express.Router();
 
@@ -36,6 +37,11 @@ const defaultRoutes: Route[] = [
   {
     path: '/',
     route: jobRoute,
+  },
+
+  {
+    path: '/',
+    route: offerRoute,
   },
   
 ];

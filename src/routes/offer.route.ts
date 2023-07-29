@@ -1,6 +1,6 @@
 import express from 'express';
-import userSchemas from '../schemas/user.schemas';
-import locationController from '../controllers/location.controller';
+import offerSchemas from '../schemas/offer.schemas';
+import offerController from '../controllers/offer.controller';
 import validateResource from "../middlewares/validateResource";
 import requireRegistration from '../middlewares/requireRegistration';
 import requireUser from '../middlewares/requireUser';
@@ -8,7 +8,7 @@ import requireUser from '../middlewares/requireUser';
 
 const router = express.Router();
 
-router.get('/cities', requireUser(), locationController.getCities);
+router.post('/make-offer', validateResource(offerSchemas.makeOfferSchema), requireUser(), offerController.makeOffer);
 
 
 export default router;

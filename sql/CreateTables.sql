@@ -82,9 +82,9 @@ CREATE TABLE IF NOT EXISTS Jobs (
 CREATE TABLE IF NOT EXISTS Offers (
  	offer_id VARCHAR(255),
 	job_id VARCHAR(255) NOT NULL,
-	receiver VARCHAR(255) NOT NULL,
 	requester VARCHAR(255) NOT NULL,
-	offer_status OFFER_STATE NOT NULL DEFAULT 'accepted',
+	receiver VARCHAR(255) NOT NULL,
+	offer_status OFFER_STATE NOT NULL DEFAULT 'pending',
  	offer_date DATE NOT NULL,
 	response_date DATE,
  	dismiss_date DATE,
