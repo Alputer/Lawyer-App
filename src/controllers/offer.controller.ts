@@ -28,6 +28,39 @@ export async function makeOffer(
       }
     }
 
+    export async function acceptOffer(
+        req: Request,
+        res: Response
+      ) {
+      
+        try {
+            
+            const { offerId } = req.body;
+            const executorCandidate = res.locals.user.email;
+    
+            const offerExists = await offerService.offerExists(offerId);
+            if(!offerExists){
+              return res.status(404).json({ error: `Offer with id '${offerId}' could not found` });
+            }
+
+            const isDismissed = await offerService.isDismissed(offerId);
+            if(isDismissed){
+              return res.status(409).json({ error: `Offer with id '${offerId}' is already dismissed, possibly because another lawyer has already accepted the offer` });
+            }
+    
+            await offerService.acceptOffer(offerId, executorCandidate);
+    
+            return res.status(200).json({
+              message: "Offer is successfully accepted",
+            });
+    
+        } catch (e: any) {
+            console.error('Error accepting an offer', e);
+            res.status(500).json({ error: 'An internal server error occurred.' });
+          }
+        }
+
   export default {
     makeOffer,
+    acceptOffer,
   };

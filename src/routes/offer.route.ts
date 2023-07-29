@@ -9,6 +9,7 @@ import requireUser from '../middlewares/requireUser';
 const router = express.Router();
 
 router.post('/make-offer', validateResource(offerSchemas.makeOfferSchema), requireUser(), offerController.makeOffer);
+router.post('/accept-offer', validateResource(offerSchemas.acceptOfferSchema), requireUser(), offerController.acceptOffer);
 
 
 export default router;

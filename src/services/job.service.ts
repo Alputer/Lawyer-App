@@ -7,6 +7,11 @@ export async function jobExists(jobId: string){
   return queryResult.rowCount > 0
 }
 
+export async function setExecutor(jobId: string, executor: string, responseDate: Date){
+  await query("UPDATE Jobs SET executor = $1, job_status = 'ongoing', start_date = $2 WHERE job_id = $3", [executor, responseDate, jobId])
+  return;
+}
+
 export async function createJob( requester: string, jobDescription: string, dueDate: Date) {
     const jobId = uuidv4();
     const createDate = new Date();
