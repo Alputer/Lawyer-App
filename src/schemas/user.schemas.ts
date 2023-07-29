@@ -60,7 +60,7 @@ const createUserSchema = object({
     }),
   });
 
-  const getAvailableLawyersSchema = object({
+  const getLawyersSchema = object({
     params: object({
       barId: string(),
     })
@@ -86,4 +86,4 @@ TypeOf<typeof createUserSchema>["body"],
 "passwordConfirmation"
 >;
 
-export default {createUserSchema, updateProfileSchema, rateLawyerSchema, getAvailableLawyersSchema, getUserProfileSchema, updateCityOfTheUserSchema};
+export default {createUserSchema, updateProfileSchema, rateLawyerSchema, getLawyersSchema, getUserProfileSchema, updateCityOfTheUserSchema};

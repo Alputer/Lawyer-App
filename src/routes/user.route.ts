@@ -12,7 +12,7 @@ router.post('/register', validateResource(userSchemas.createUserSchema), userCon
 router.get('/user-profile/:userEmail', validateResource(userSchemas.getUserProfileSchema), requireUser(), userController.getUserProfile);
 router.put('/update-profile', validateResource(userSchemas.updateProfileSchema), requireRegistration({userEmailField: "email"}), requireUser(), userController.updateProfile);
 router.post('/rate-lawyer', validateResource(userSchemas.rateLawyerSchema), requireRegistration({userEmailField: "rater_email"}), requireRegistration({userEmailField: "rated_email"}), requireUser(), userController.rateLawyer);
-router.get('/available-lawyers/:barId', validateResource(userSchemas.getAvailableLawyersSchema), requireUser(), userController.getAvailableLawyers);
+router.get('/lawyers/:barId', validateResource(userSchemas.getLawyersSchema), requireUser(), userController.getLawyers);
 router.get('/user-city', requireUser(), userController.getCityOfTheUser);
 router.patch('/user/:cityName', validateResource(userSchemas.updateCityOfTheUserSchema), requireUser(), userController.updateCityOfTheUser);
 

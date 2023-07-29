@@ -90,23 +90,26 @@ export async function register(
     }
   }
 
-  export async function getAvailableLawyers(
+  export async function getLawyers(
     req: Request,
     res: Response
   ) {
   
     try {
         
-        const {barId} = req.params
+        const {barId} = req.params;
+        const {availability} = req.query;
 
         const barExists = await barService.barExists(barId);
         if(!barExists){
           return res.status(404).json({ error: `Bar with id '${barId}' could not found` });
         }
-
-        const available_lawyers = await userService.getAvailableLawyers(barId);
         
-        return res.status(200).json({available_lawyers: available_lawyers});
+        let lawyers = [];
+
+        lawyers = await userService.getLawyers(barId, availability);
+        
+        return res.status(200).json({lawyers: lawyers});
 
     } catch (e: any) {
         console.error('Error getting available lawyers in the bar:', e);
@@ -192,7 +195,7 @@ export async function register(
     register,
     updateProfile,
     rateLawyer,
-    getAvailableLawyers,
+    getLawyers,
     getUserProfile,
     getCityOfTheUser,
     updateCityOfTheUser,
