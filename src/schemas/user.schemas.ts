@@ -1,4 +1,4 @@
-import { z, object, string, number, TypeOf} from "zod";
+import { z, object, string, number, TypeOf, } from "zod";
 
 
 const phoneRegex = new RegExp(
@@ -63,7 +63,12 @@ const createUserSchema = object({
   const getLawyersSchema = object({
     params: object({
       barId: string(),
-    })
+  }),
+    query: object({
+      availability: z.enum(["True", "False"]).optional(),
+      minRating: string().min(1).max(5).optional(),
+      maxRating: string().min(1).max(5).optional(),
+  })
   });
 
   const getUserProfileSchema = object({
@@ -85,5 +90,14 @@ export type CreateUserInput = Omit<
 TypeOf<typeof createUserSchema>["body"],
 "passwordConfirmation"
 >;
+
+export interface Lawyer {
+  email: string,
+  firstname: string,
+  lastname: string,
+  bar_id: string,
+  lawyer_state: string,
+  average_rating: number,
+}
 
 export default {createUserSchema, updateProfileSchema, rateLawyerSchema, getLawyersSchema, getUserProfileSchema, updateCityOfTheUserSchema};

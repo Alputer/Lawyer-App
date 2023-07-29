@@ -7,7 +7,7 @@ const createJobSchema = object({
       }),
       dueDate: coerce.date({
         invalid_type_error: "Input is not a valid date",
-      }).optional(),
+      }).optional()
     }),
   });
 

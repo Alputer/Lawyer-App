@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import {userService, barService, mailService, locationService} from '../services';
+import {userService, barService, mailService, locationService, filterService} from '../services';
 
 const { v4: uuidv4 } = require('uuid');
 
@@ -96,20 +96,21 @@ export async function register(
   ) {
   
     try {
-        
+      
         const {barId} = req.params;
-        const {availability} = req.query;
-
+        const {availability, minRating, maxRating} = req.query;
+        
         const barExists = await barService.barExists(barId);
         if(!barExists){
           return res.status(404).json({ error: `Bar with id '${barId}' could not found` });
         }
         
         let lawyers = [];
-
-        lawyers = await userService.getLawyers(barId, availability);
         
-        return res.status(200).json({lawyers: lawyers});
+        const all_lawyers = await userService.getLawyers(barId);
+        const filtered_lawyers = await filterService.filterLawyers(all_lawyers, availability, parseFloat(minRating as string), parseFloat(maxRating as string));
+        
+        return res.status(200).json({lawyers: filtered_lawyers});
 
     } catch (e: any) {
         console.error('Error getting available lawyers in the bar:', e);

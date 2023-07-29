@@ -1,5 +1,5 @@
 import { QueryResult } from "pg";
-import { CreateUserInput } from "../schemas/user.schemas";
+import { CreateUserInput, Lawyer } from "../schemas/user.schemas";
 import { query } from "../utils/db";
 import { hashPassword } from "./auth.service";
 
@@ -37,21 +37,18 @@ export async function createUser(input: CreateUserInput, verificationCode: strin
     return;
   }
 
-  export async function getLawyers(barId: string, availability: string | null) {
+  export async function getLawyers(barId: string) : Promise<Lawyer[]>{
 
-    let queryResult = {} as QueryResult<any>;
-    if(availability === "True"){
-      queryResult = await query("SELECT (email, firstname, lastname) FROM Lawyers WHERE bar_id = $1 AND lawyer_state = 'free'", [barId]);
-    }
-    else{
-      queryResult = await query("SELECT (email, firstname, lastname) FROM Lawyers WHERE bar_id = $1", [barId]);
-    }
+    const queryResult = await query("SELECT (email, firstname, lastname, bar_id, lawyer_state, average_rating) FROM Lawyers WHERE bar_id = $1", [barId]);
 
     const lawyers = queryResult.rows.map(lawyer => {
       const items = lawyer.row.split(',');
       return {email: items[0].slice(1),
              firstname: items[1],
-             lastname: items[2].slice(0, -1),
+             lastname: items[2],
+             bar_id: items[3],
+             lawyer_state: items[4],
+             average_rating: parseFloat(items[5].slice(0, -1)),
             };
         } 
       );
