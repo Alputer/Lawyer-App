@@ -98,7 +98,7 @@ export async function register(
     try {
       
         const {barId} = req.params;
-        const {availability, minRating, maxRating} = req.query;
+        const {availability, minRating, maxRating, sort} = req.query;
         
         const barExists = await barService.barExists(barId);
         if(!barExists){
@@ -107,7 +107,7 @@ export async function register(
         
         let lawyers = [];
         
-        const all_lawyers = await userService.getLawyers(barId);
+        const all_lawyers = await userService.getLawyers(barId, sort);
         const filtered_lawyers = await filterService.filterLawyers(all_lawyers, availability, parseFloat(minRating as string), parseFloat(maxRating as string));
         
         return res.status(200).json({lawyers: filtered_lawyers});

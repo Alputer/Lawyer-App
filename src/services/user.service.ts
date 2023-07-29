@@ -37,9 +37,15 @@ export async function createUser(input: CreateUserInput, verificationCode: strin
     return;
   }
 
-  export async function getLawyers(barId: string) : Promise<Lawyer[]>{
+  export async function getLawyers(barId: string, sort: string | undefined) : Promise<Lawyer[]>{
+    let queryResult = {} as QueryResult;
 
-    const queryResult = await query("SELECT (email, firstname, lastname, bar_id, lawyer_state, average_rating) FROM Lawyers WHERE bar_id = $1", [barId]);
+    if(sort === "True"){
+      queryResult = await query("SELECT (email, firstname, lastname, bar_id, lawyer_state, average_rating) FROM Lawyers WHERE bar_id = $1 ORDER BY average_rating", [barId]);
+    }
+    else{
+      queryResult = await query("SELECT (email, firstname, lastname, bar_id, lawyer_state, average_rating) FROM Lawyers WHERE bar_id = $1", [barId]);
+    }
 
     const lawyers = queryResult.rows.map(lawyer => {
       const items = lawyer.row.split(',');
