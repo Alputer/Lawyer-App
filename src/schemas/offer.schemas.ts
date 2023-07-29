@@ -16,4 +16,13 @@ const makeOfferSchema = object({
     }),
   });
 
-  export default {makeOfferSchema, acceptOfferSchema};
+  const rejectOfferSchema = object({
+    body: object({
+      offerId: string({
+        required_error: "Offer Id is required",
+      }),
+    }),
+  });
+
+
+  export default {makeOfferSchema, acceptOfferSchema, rejectOfferSchema};

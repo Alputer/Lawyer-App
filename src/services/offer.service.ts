@@ -8,6 +8,11 @@ export async function getJobId(offerId: string){
     return queryResult.rows[0].job_id;
   }
 
+  export async function getReceiver(offerId: string){
+    const queryResult = await query("SELECT receiver FROM Offers WHERE offer_id = $1", [offerId]);
+    return queryResult.rows[0].receiver;
+  }
+
 export async function offerExists(offerId: string){
     const queryResult = await query("SELECT * FROM Offers WHERE offer_id = $1", [offerId]);
     return queryResult.rowCount > 0
@@ -32,5 +37,11 @@ export async function makeOffer(jobId: string, requester: string) {
     const jobId = await getJobId(offerId);
     await jobService.setExecutor(jobId, executor, responseDate);
     await query("UPDATE Offers SET offer_status = 'accepted', response_date = $1 WHERE offer_id = $2", [responseDate, offerId]);
+    return;
+  }
+
+  export async function rejectOffer(offerId: string) {
+    const responseDate = new Date();
+    await query("UPDATE Offers SET offer_status = 'rejected', response_date = $1 WHERE offer_id = $2", [responseDate, offerId]);
     return;
   }
