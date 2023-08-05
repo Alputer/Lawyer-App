@@ -56,6 +56,17 @@ const devRoutes: Route[] = [
 ];
 */
 
+  /**
+   * @openapi
+   * /api/healthcheck:
+   *  get:
+   *     tags:
+   *     - Healthcheck
+   *     description: Responds if the app is up and running
+   *     responses:
+   *       200:
+   *         description: App is up and running
+   */
 router.get("/healthcheck", (_, res) => res.sendStatus(200));
 
 defaultRoutes.forEach((route: Route) => {

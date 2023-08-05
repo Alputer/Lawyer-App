@@ -7,6 +7,7 @@ import {connect} from "./utils/db";
 import router from './routes';
 import deserializeUser from "./middlewares/deserializeUser";
 import cookieParser from 'cookie-parser';
+import swaggerDocs from "./utils/swagger";
 
 const port = config.get<number>("port");
 
@@ -25,5 +26,7 @@ app.listen(port, async () => {
     logger.info(`App is running at http://localhost:${port}`);
   
     await connect();
+
+    swaggerDocs(app, port);
  
   });

@@ -5,6 +5,41 @@ const phoneRegex = new RegExp(
   /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
 );
 
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    CreateUserInput:
+ *      type: object
+ *      required:
+ *        - email
+ *        - firstname
+ *        - lastname
+ *        - password
+ *        - passwordConfirmation
+ *      properties:
+ *        email:
+ *          type: string
+ *          example: jane.doe@example.com
+ *        firstname:
+ *          type: string
+ *          example: Jane
+ *        lastname:
+ *          type: string
+ *          example: Doe
+ *        password:
+ *          type: string
+ *          example: 123456
+ *        passwordConfirmation:
+ *          type: string
+ *          example: 123456
+ *    CreateUserResponse:
+ *      type: object
+ *      properties:
+ *        message:
+ *          type: string
+ *          example: "User successfully created"
+ */
 const createUserSchema = object({
     body: object({
       firstname: string({
@@ -28,23 +63,72 @@ const createUserSchema = object({
     }),
   });
 
-  const phoneNumberSchema = z.string().regex(/^\+\d{1,3}\d{4,14}$/).refine((value) => {
-    return /\d/.test(value); // Ensuring the phone number contains at least one digit
-  }, {
-    message: 'Invalid phone number format. Should be in the format: "+{country_code}{phone_number}"',
-  })
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    UpdateProfileInput:
+ *      type: object
+ *      properties:
+ *        age:
+ *          type: integer
+ *          example: 25
+ *        phoneNumber:
+ *          type: string
+ *          example: "+905329876543"
+  *        linkedinUrl:
+ *          type: string
+ *          example: https://www.linkedin.com/in/alptuna/
+ *    UpdateProfileResponse:
+ *      type: object
+ *      properties:
+ *        message:
+ *          type: string
+ *          example: "Profile successfully updated"
+ */
 
   const updateProfileSchema = object({
-    body: object({
+    params: object({
       email: string({
         required_error: "Email is required",
       }).email("Not a valid email"),
+    }),
+    body: object({
       age: number().min(18).max(100).nullable().optional(),
       phoneNumber: string().regex(phoneRegex).nullable().optional(),
       linkedinUrl: string().url().nullable().optional(),
     }),
   });
 
+  /**
+   * @openapi
+   * components:
+   *  schemas:
+   *    RateLawyerInput:
+   *      type: object
+   *      required:
+   *        - rater_email
+   *        - rated_email
+   *        - rating
+   *      properties:
+   *        rater_email:
+   *          type: string
+   *          example: test1@gmail.com
+   *        rated_email:
+   *          type: string
+   *          example: test2@gmail.com
+   *        rating:
+   *          type: integer
+   *          minimum: 1
+   *          maximum: 5
+   *          example: 3
+   *    RateLawyerResponse:
+   *      type: object
+   *      properties:
+   *        message:
+   *          type: string
+   *          example: Lawyer is successfully rated
+   */
   const rateLawyerSchema = object({
     body: object({
       rater_email: string({
@@ -60,6 +144,36 @@ const createUserSchema = object({
     }),
   });
 
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    GetLawyersResponse:
+ *      type: array
+ *      items:
+ *        type: object
+ *        required:
+ *          -email
+ *          -firstname
+ *          -lastname
+ *          -bar_id
+ *          -lawyer_state
+ *          -average_rating
+ *        properties:
+ *          email:
+ *            type: string
+ *          firstname:
+ *            type: string
+ *          lastname:
+ *            type: string 
+ *          bar_id:
+ *            type: integer
+ *          lawyer_state:
+ *            type: string
+ *          average_rating:
+ *            type: float    
+ */
+
   const getLawyersSchema = object({
     params: object({
       barId: string(),
@@ -71,11 +185,54 @@ const createUserSchema = object({
   })
   });
 
+/**
+  * @openapi
+  * components:
+  *    GetProfileResponse:
+  *      type: object
+  *      required:
+  *        - age
+  *        - phone_number
+  *        - linkedin_url
+  *      properties:
+  *        age:
+  *          type: integer
+  *          example: 25
+  *        phone_number:
+  *          type: string
+  *          example: "+905323456789"
+  *        linkedin_url:
+  *          type: string
+  *          example: https://www.linkedin.com/in/alptuna/
+  */
+
   const getUserProfileSchema = object({
     params: object({
       userEmail: string(),
     })
   });
+
+  /**
+  * @openapi
+  * components:
+  *   schemas:
+  *    GetUserCityResponse:
+  *      type: object
+  *      required:
+  *        - user_location
+  *      properties:
+  *        user_location:
+  *         type: string
+  *         example: "Istanbul"
+  *    UpdateUserCityResponse:
+  *      type: object
+  *      required:
+  *        - message
+  *      properties:
+  *        message:
+  *          type: string
+  *          example: "User's location is successfully updated"
+  */
 
   const updateCityOfTheUserSchema = object({
     params: object({

@@ -8,6 +8,32 @@ import requireUser from '../middlewares/requireUser';
 
 const router = express.Router();
 
+  /**
+   * @openapi
+   * '/api/bars/:cityId':
+   *  get:
+   *     tags:
+   *     - Bar
+   *     summary: Get bars in a given city
+   *     parameters:
+   *     - in: path
+   *     description: ID of the city
+   *     required: true
+   *     schema:
+   *       type: integer
+   *     responses:
+   *      200:
+   *        description: Success
+   *        content:
+   *          application/json:
+   *            schema:
+   *              $ref: '#/components/schemas/GetBarsResponse'
+   *      404:
+   *        description: City not found 
+   *      500:
+   *        description: Internal server error
+   */
+
 router.get('/bars/:cityId', validateResource(barSchemas.getBarsInTheCitySchema), requireUser(), barController.getBarsInTheCity);
 
 

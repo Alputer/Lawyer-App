@@ -45,7 +45,8 @@ export async function register(
     res: Response
   ) {
     try{
-      const {email, age, phoneNumber, linkedinUrl} = req.body;
+      const {email} = req.params;
+      const {age, phoneNumber, linkedinUrl} = req.body;
 
       await userService.updateProfile(email, age, phoneNumber, linkedinUrl);
 
@@ -80,8 +81,8 @@ export async function register(
     } catch (e: any) {
       
       if (e.code === "23505") {
-        return res.status(400).json({
-          message: "Lawyer already rated this lawyer",
+        return res.status(409).json({
+          message: "Rater lawyer already rated this lawyer",
         });
       }
 
