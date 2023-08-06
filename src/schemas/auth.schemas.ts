@@ -157,7 +157,7 @@ import { object, string} from "zod";
       }).email("Not a valid email"),
       newPassword: string({
         required_error: "New password is required",
-      }),
+      }).min(6, "Password too short - should be 6 chars minimum"),
     })
   });
 
