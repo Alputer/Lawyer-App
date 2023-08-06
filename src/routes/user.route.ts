@@ -58,6 +58,10 @@ router.post('/user', validateResource(userSchemas.createUserSchema), userControl
    *          application/json:
    *            schema:
    *              $ref: '#/components/schemas/GetLawyersResponse'
+   *      400:
+   *        description: Incorrect path parameter
+   *      403:
+   *        description: Invalid or expired access token
    *      404:
    *        description: Bar not found 
    *      500:
@@ -86,6 +90,10 @@ router.get('/lawyers/:barId', validateResource(userSchemas.getLawyersSchema), re
    *          application/json:
    *            schema:
    *              $ref: '#/components/schemas/GetProfileResponse'
+   *      400:
+   *        description: Incorrect path parameter
+   *      403:
+   *        description: Invalid or expired access token
    *      404:
    *        description: User not found.
    *      500:
@@ -107,6 +115,12 @@ router.get('/lawyers/:barId', validateResource(userSchemas.getLawyersSchema), re
    *          application/json:
    *            schema:
    *              $ref: '#/components/schemas/UpdateProfileResponse'
+   *      400:
+   *        description: Incorrect path parameter or payload
+   *      403:
+   *        description: Invalid or expired access token
+   *      404:
+   *        description: User not found.
    *       500:
    *        description: Internal server error
    */   
@@ -133,6 +147,10 @@ router.put('/user-profile/:userEmail', validateResource(userSchemas.updateProfil
    *                application/json:
    *                    schema:
    *                        $ref: '#/components/schemas/RateLawyerResponse'
+   *        400:
+   *          description: Incorrect payload
+   *        404:
+   *          description: User not found.
    *        409:
    *            description: Given rater lawyer already rated the other lawyer.
    *        500:
@@ -155,7 +173,9 @@ router.post('/rate-lawyer', validateResource(userSchemas.rateLawyerSchema), requ
    *            schema:
    *              $ref: '#/components/schemas/GetUserCityResponse'
    *      404:
-   *        description: User has no registered city.
+   *        description: User not found.
+   *      404:
+   *        description: City not found
    *      500:
    *        description: Internal server error
    */
@@ -182,6 +202,10 @@ router.get('/user/city', requireUser(), userController.getCityOfTheUser);
    *          application/json:
    *            schema:
    *              $ref: '#/components/schemas/UpdateUserCityResponse'
+   *      400:
+   *        description: Incorrect payload
+   *      404:
+   *        description: User not found.
    *      404:
    *        description: City not found.
    *      500:

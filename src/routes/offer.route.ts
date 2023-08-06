@@ -29,6 +29,8 @@ const router = express.Router();
    *              $ref: '#/components/schemas/MakeOfferResponse'
    *      400:
    *        description: Incorrect payload
+   *      403:
+   *        description: Invalid or expired access token
    *      500:
    *        description: Internal server error
    */
@@ -57,6 +59,8 @@ router.post('/make-offer', validateResource(offerSchemas.makeOfferSchema), requi
    *              $ref: '#/components/schemas/AcceptOfferResponse'
    *      400:
    *        description: Incorrect payload
+   *      403:
+   *        description: Invalid or expired access token
    *      500:
    *        description: Internal server error
    */
@@ -85,6 +89,8 @@ router.post('/accept-offer', validateResource(offerSchemas.acceptOfferSchema), r
    *              $ref: '#/components/schemas/RejectOfferResponse'
    *      400:
    *        description: Incorrect payload
+   *      403:
+   *        description: Invalid or expired access token
    *      500:
    *        description: Internal server error
    */

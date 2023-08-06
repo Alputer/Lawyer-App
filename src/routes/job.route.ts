@@ -30,6 +30,8 @@ const router = express.Router();
    *              $ref: '#/components/schemas/CreateJobResponse'
    *      400:
    *        description: Incorrect payload
+   *      403:
+   *        description: Invalid or expired access token
    *      500:
    *        description: Internal server error
    */

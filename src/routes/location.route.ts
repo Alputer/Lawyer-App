@@ -29,6 +29,8 @@ const router = express.Router();
    *                  - "New York"
    *                  - "Tokyo"
    *                  - "London"
+   *      403:
+   *        description: Invalid or expired access token
    *      500:
    *        description: Internal server error
    */

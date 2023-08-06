@@ -28,6 +28,10 @@ const router = express.Router();
    *          application/json:
    *            schema:
    *              $ref: '#/components/schemas/GetBarsResponse'
+   *      400:
+   *        description: Incorrect path paremeter
+   *      403:
+   *        description: Invalid or expired access token
    *      404:
    *        description: City not found 
    *      500:

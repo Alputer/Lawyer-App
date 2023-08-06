@@ -33,6 +33,8 @@ const router = express.Router();
    *        description: Invalid credentials
    *      403:
    *        description: Account not validated
+   *      404:
+   *        description: User not found.
    *      500:
    *        description: Internal server error
    */
@@ -59,6 +61,10 @@ router.post('/login', validateResource(authSchemas.loginSchema), requireRegistra
    *          application/json:
    *            schema:
    *              $ref: '#/components/schemas/SendVerificationEmailResponse'
+   *      400:
+   *        description: Incorrect payload
+   *      404:
+   *        description: User not found.
    *      500:
    *        description: Internal server error
    */
@@ -89,6 +95,8 @@ router.post('/send-verification-email', validateResource(authSchemas.sendVerific
    *        description: Incorrect payload
    *      401:
    *        description: Invalid credentials
+   *      404:
+   *        description: User not found.
    *      500:
    *        description: Internal server error
    */
@@ -119,6 +127,8 @@ router.post('/verify-email', validateResource(authSchemas.verifyEmailSchema), re
    *        description: Incorrect payload
    *      401:
    *        description: Invalid or expired refresh token
+   *      404:
+   *        description: User not found.
    *      500:
    *        description: Internal server error
    */
@@ -147,6 +157,8 @@ router.post('/refresh-token', validateResource(authSchemas.refreshTokenSchema), 
    *              $ref: '#/components/schemas/UpdatePasswordResponse'
    *      400:
    *        description: Incorrect payload
+   *      404:
+   *        description: User not found.
    *      500:
    *        description: Internal server error
    */
@@ -175,6 +187,8 @@ router.post('/update-password', validateResource(authSchemas.updatePasswordSchem
    *              $ref: '#/components/schemas/ForgotPasswordResponse'
    *      400:
    *        description: Incorrect payload
+   *      404:
+   *        description: User not found.
    *      500:
    *        description: Internal server error
    */
@@ -203,8 +217,8 @@ router.post('/forgot-password', validateResource(authSchemas.forgotPasswordSchem
    *              $ref: '#/components/schemas/ResetPasswordResponse'
    *      400:
    *        description: Incorrect payload
-   *      401:
-   *        description: Invalid reset token
+   *      404:
+   *        description: User not found.
    *      500:
    *        description: Internal server error
    */
