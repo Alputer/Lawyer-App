@@ -1,5 +1,8 @@
 import { z, object, string, number, TypeOf} from "zod";
 
+const intRegex = new RegExp(
+  /^\d+$/
+);
 /**
  * @openapi
  * components:
@@ -13,7 +16,7 @@ import { z, object, string, number, TypeOf} from "zod";
 
   const getBarsInTheCitySchema = object({
     params: object({
-      cityId: string(),
+      cityId: string().regex(intRegex),
     })
   });
 

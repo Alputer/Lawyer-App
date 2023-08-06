@@ -1,5 +1,8 @@
 import { z, object, string, number, TypeOf, } from "zod";
 
+const intRegex = new RegExp(
+  /^\d+$/
+);
 
 const phoneRegex = new RegExp(
   /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
@@ -176,7 +179,7 @@ const createUserSchema = object({
 
   const getLawyersSchema = object({
     params: object({
-      barId: string(),
+      barId: string().regex(intRegex),
   }),
     query: object({
       availability: z.enum(["True", "False"]).optional(),
