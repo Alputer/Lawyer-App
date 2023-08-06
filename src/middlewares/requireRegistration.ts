@@ -10,9 +10,9 @@ async (req: Request, res: Response, next: NextFunction) => {
 
   const queryResult = await query('SELECT * FROM Lawyers L WHERE L.email = $1', [email]);
   
-  const doesUserExist = queryResult.rowCount == 1;
+  const userExists = queryResult.rowCount == 1;
   
-  if (!doesUserExist) {
+  if (!userExists) {
     return res.status(404).json({ error: 'User not found' });
   }
 

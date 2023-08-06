@@ -62,6 +62,7 @@ const devRoutes: Route[] = [
    *  get:
    *     tags:
    *     - Healthcheck
+   *     summary: Responds if the app is up and running
    *     description: Responds if the app is up and running
    *     responses:
    *       200:

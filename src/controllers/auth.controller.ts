@@ -94,7 +94,7 @@ export async function verifyEmail(
     if(isVerificationCodeCorrect){
 
       await authService.makeUserVerified(email);
-      return res.status(200).json({ message: 'Email verified successfully!' });
+      return res.status(200).json({ message: 'Email verified successfully' });
 
     }
     else {
@@ -178,7 +178,7 @@ export async function forgotPassword(
 
     await mailService.sendEmail(mailOptions);
 
-    res.json({ message: 'Password reset token sent to the email address.' });
+    res.status(200).json({ message: 'Password reset token sent to the email address.' });
   } catch (error) {
 
     console.error('Error sending reset token:', error);
