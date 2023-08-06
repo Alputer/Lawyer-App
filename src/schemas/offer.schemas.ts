@@ -1,4 +1,4 @@
-import { z, object, string, coerce} from "zod";
+import { z, object, string, coerce } from "zod";
 
 /**
  * @openapi
@@ -21,12 +21,12 @@ import { z, object, string, coerce} from "zod";
  */
 
 const makeOfferSchema = object({
-    body: object({
-      jobId: string({
-        required_error: "Job Id is required",
-      }),
+  body: object({
+    jobId: string({
+      required_error: "Job Id is required",
     }),
-  });
+  }),
+});
 
 /**
  * @openapi
@@ -48,13 +48,13 @@ const makeOfferSchema = object({
  *          example: "Offer is successfully accepted"
  */
 
-  const acceptOfferSchema = object({
-    body: object({
-      offerId: string({
-        required_error: "Offer Id is required",
-      }),
+const acceptOfferSchema = object({
+  body: object({
+    offerId: string({
+      required_error: "Offer Id is required",
     }),
-  });
+  }),
+});
 
 /**
  * @openapi
@@ -76,13 +76,12 @@ const makeOfferSchema = object({
  *          example: "Offer is successfully rejected"
  */
 
-  const rejectOfferSchema = object({
-    body: object({
-      offerId: string({
-        required_error: "Offer Id is required",
-      }),
+const rejectOfferSchema = object({
+  body: object({
+    offerId: string({
+      required_error: "Offer Id is required",
     }),
-  });
+  }),
+});
 
-
-  export default {makeOfferSchema, acceptOfferSchema, rejectOfferSchema};
+export default { makeOfferSchema, acceptOfferSchema, rejectOfferSchema };

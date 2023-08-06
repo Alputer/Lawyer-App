@@ -1,10 +1,10 @@
-import express from 'express';
-import authRoute from './auth.route';
-import userRoute from './user.route';
-import locationRoute from './location.route';
-import barRoute from './bar.route';
-import jobRoute from './job.route';
-import offerRoute from './offer.route';
+import express from "express";
+import authRoute from "./auth.route";
+import userRoute from "./user.route";
+import locationRoute from "./location.route";
+import barRoute from "./bar.route";
+import jobRoute from "./job.route";
+import offerRoute from "./offer.route";
 
 const router = express.Router();
 
@@ -15,35 +15,34 @@ interface Route {
 
 const defaultRoutes: Route[] = [
   {
-    path: '/',
+    path: "/",
     route: authRoute,
   },
-  
+
   {
-    path: '/',
+    path: "/",
     route: userRoute,
   },
 
   {
-    path: '/',
+    path: "/",
     route: locationRoute,
   },
 
   {
-    path: '/',
+    path: "/",
     route: barRoute,
   },
 
   {
-    path: '/',
+    path: "/",
     route: jobRoute,
   },
 
   {
-    path: '/',
+    path: "/",
     route: offerRoute,
   },
-  
 ];
 
 /*
@@ -56,18 +55,18 @@ const devRoutes: Route[] = [
 ];
 */
 
-  /**
-   * @openapi
-   * /api/healthcheck:
-   *  get:
-   *     tags:
-   *     - Healthcheck
-   *     summary: Responds if the app is up and running
-   *     description: Responds if the app is up and running
-   *     responses:
-   *       200:
-   *         description: App is up and running
-   */
+/**
+ * @openapi
+ * /api/healthcheck:
+ *  get:
+ *     tags:
+ *     - Healthcheck
+ *     summary: Responds if the app is up and running
+ *     description: Responds if the app is up and running
+ *     responses:
+ *       200:
+ *         description: App is up and running
+ */
 router.get("/healthcheck", (_, res) => res.sendStatus(200));
 
 defaultRoutes.forEach((route: Route) => {

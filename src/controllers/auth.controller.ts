@@ -146,7 +146,8 @@ export async function updatePassword(
   res: Response
 )  {
   try {
-    const { email, newPassword } = req.body;
+    const email = res.locals.user.email;
+    const { newPassword } = req.body;
 
     await authService.changePassword(email, newPassword);
 

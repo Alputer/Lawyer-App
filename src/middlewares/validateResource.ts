@@ -12,7 +12,9 @@ const validateResource =
       });
       next();
     } catch (e: any) {
-      return res.status(400).json({ message: "Invalid schema", error: e.errors });
+      return res
+        .status(400)
+        .json({ message: "Invalid schema", error: e.errors });
     }
   };
 

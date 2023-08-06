@@ -2,14 +2,12 @@ import nodemailer, { SendMailOptions } from "nodemailer";
 import config from "config";
 import log from "../utils/logger";
 
-
-
 // Configure Nodemailer
 const transporter = nodemailer.createTransport({
-  service: 'Gmail',
+  service: "Gmail",
   auth: {
-    user: 'alp.tuna.453@gmail.com',
-    pass: config.get<string>('emailPassword'),
+    user: "alp.tuna.453@gmail.com",
+    pass: config.get<string>("emailPassword"),
   },
 });
 

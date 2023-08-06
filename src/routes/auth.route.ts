@@ -39,7 +39,7 @@ const router = express.Router();
    *        description: Internal server error
    */
 
-router.post('/login', validateResource(authSchemas.loginSchema), requireRegistration({userEmailField: "email"}), authController.login);
+router.post('/login', validateResource(authSchemas.loginSchema), requireRegistration({userEmailField: "email", place: "body"}), authController.login);
 
   /**
    * @openapi
@@ -69,7 +69,7 @@ router.post('/login', validateResource(authSchemas.loginSchema), requireRegistra
    *        description: Internal server error
    */
 
-router.post('/send-verification-email', validateResource(authSchemas.sendVerificationEmailSchema), requireRegistration({userEmailField: "email"}), authController.sendVerificationEmail);
+router.post('/send-verification-email', validateResource(authSchemas.sendVerificationEmailSchema), requireRegistration({userEmailField: "email", place: "body"}), authController.sendVerificationEmail);
 
   /**
    * @openapi
@@ -101,7 +101,7 @@ router.post('/send-verification-email', validateResource(authSchemas.sendVerific
    *        description: Internal server error
    */
 
-router.post('/verify-email', validateResource(authSchemas.verifyEmailSchema), requireRegistration({userEmailField: "email"}), authController.verifyEmail);
+router.post('/verify-email', validateResource(authSchemas.verifyEmailSchema), requireRegistration({userEmailField: "email", place: "body"}), authController.verifyEmail);
 
   /**
    * @openapi
@@ -133,7 +133,7 @@ router.post('/verify-email', validateResource(authSchemas.verifyEmailSchema), re
    *        description: Internal server error
    */
 
-router.post('/refresh-token', validateResource(authSchemas.refreshTokenSchema), requireRegistration({userEmailField: "email"}), authController.refreshToken);
+router.post('/refresh-token', validateResource(authSchemas.refreshTokenSchema), requireRegistration({userEmailField: "email", place: "body"}), authController.refreshToken);
 
   /**
    * @openapi
@@ -163,7 +163,7 @@ router.post('/refresh-token', validateResource(authSchemas.refreshTokenSchema), 
    *        description: Internal server error
    */
 
-router.post('/update-password', validateResource(authSchemas.updatePasswordSchema), requireRegistration({userEmailField: "email"}), requireUser(), authController.updatePassword);
+router.post('/update-password', validateResource(authSchemas.updatePasswordSchema), requireRegistration({userEmailField: "email", place: "body"}), requireUser(), authController.updatePassword);
 
   /**
    * @openapi
@@ -193,7 +193,7 @@ router.post('/update-password', validateResource(authSchemas.updatePasswordSchem
    *        description: Internal server error
    */
 
-router.post('/forgot-password', validateResource(authSchemas.forgotPasswordSchema), requireRegistration({userEmailField: "email"}), authController.forgotPassword);
+router.post('/forgot-password', validateResource(authSchemas.forgotPasswordSchema), requireRegistration({userEmailField: "email", place: "body"}), authController.forgotPassword);
 
   /**
    * @openapi
@@ -223,7 +223,7 @@ router.post('/forgot-password', validateResource(authSchemas.forgotPasswordSchem
    *        description: Internal server error
    */
 
-router.post('/reset-password', validateResource(authSchemas.resetPasswordSchema), requireRegistration({userEmailField: "email"}), authController.resetPassword);
+router.post('/reset-password', validateResource(authSchemas.resetPasswordSchema), requireRegistration({userEmailField: "email", place: "body"}), authController.resetPassword);
 
 
 export default router;

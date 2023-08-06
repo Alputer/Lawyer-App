@@ -78,7 +78,7 @@ import { object, string} from "zod";
  *          example: "johnDoe@gmail.com"
  *        verificationCode:
  *          type: string
- *          example: 936e18a3-cbf9-417d-991f-851113e1e93e
+ *          example: "936e18a3-cbf9-417d-991f-851113e1e93e"
  *    VerifyEmailResponse:
  *      type: object
  *      properties:
@@ -133,12 +133,8 @@ import { object, string} from "zod";
  *    UpdatePasswordInput:
  *      type: object
  *      required:
- *        - email
  *        - newPassword
  *      properties:
- *        email:
- *          type: string
- *          example: "johnDoe@gmail.com"
  *        newPassword:
  *          type: string
  *          example: "1234567"
@@ -152,9 +148,6 @@ import { object, string} from "zod";
 
   const updatePasswordSchema = object({
     body: object({
-      email: string({
-        required_error: "Email is required",
-      }).email("Not a valid email"),
       newPassword: string({
         required_error: "New password is required",
       }).min(6, "Password too short - should be 6 chars minimum"),

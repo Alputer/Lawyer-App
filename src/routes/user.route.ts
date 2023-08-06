@@ -42,13 +42,31 @@ router.post('/user', validateResource(userSchemas.createUserSchema), userControl
  *  get:
  *    tags:
  *    - User
- *    summary: Get lawyers from given bar
+ *    summary: Get lawyers from the given bar
  *    parameters:
  *    - in: path
  *      description: ID of the bar
  *      required: true
  *      schema:
  *        type: integer
+ *    - in: query
+ *      name: availability
+ *      description: Filter lawyers by availability
+ *      required: false
+ *      schema:
+ *        type: string
+ *    - in: query
+ *      name: minRating
+ *      description: Filter lawyers by minimum rating
+ *      required: false
+ *      schema:
+ *        type: number
+ *    - in: query
+ *      name: maxRating
+ *      description: Filter lawyers by maximum rating
+ *      required: false
+ *      schema:
+ *        type: number
  *    responses:
  *      200:
  *        description: Success
@@ -57,7 +75,7 @@ router.post('/user', validateResource(userSchemas.createUserSchema), userControl
  *            schema:
  *              $ref: '#/components/schemas/GetLawyersResponse'
  *      400:
- *        description: Incorrect path parameter
+ *        description: Incorrect path parameter or invalid query parameter
  *      403:
  *        description: Invalid or expired access token
  *      404:
@@ -65,6 +83,7 @@ router.post('/user', validateResource(userSchemas.createUserSchema), userControl
  *      500:
  *        description: Internal server error
  */
+
 router.get('/lawyers/:barId', validateResource(userSchemas.getLawyersSchema), requireUser(), userController.getLawyers);
 
 /**
@@ -99,12 +118,6 @@ router.get('/lawyers/:barId', validateResource(userSchemas.getLawyersSchema), re
  *    tags:
  *    - User
  *    summary: Profile successfully updated
- *    parameters:
- *    - in: path
- *      description: Email of the user
- *      required: true
- *      schema:
- *        type: string
  *    responses:
  *      200:
  *        description: Success
@@ -122,38 +135,8 @@ router.get('/lawyers/:barId', validateResource(userSchemas.getLawyersSchema), re
  *        description: Internal server error
  */
 router.get('/user-profile/:userEmail', validateResource(userSchemas.getUserProfileSchema), requireUser(), userController.getUserProfile);
-router.put('/user-profile/:userEmail', validateResource(userSchemas.updateProfileSchema), requireRegistration({ userEmailField: 'userEmail', place: 'params' }), requireUser(), userController.updateProfile);
+router.put('/user-profile', validateResource(userSchemas.updateProfileSchema), requireUser(), userController.updateProfile);
 
-/**
- * @openapi
- * '/api/rate-lawyer':
- *  post:
- *    tags:
- *    - User
- *    summary: Rate a lawyer
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            $ref: '#/components/schemas/RateLawyerInput'
- *    responses:
- *      200:
- *        description: Success
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/RateLawyerResponse'
- *      400:
- *        description: Incorrect payload
- *      404:
- *        description: User not found.
- *      409:
- *        description: Given rater lawyer already rated the other lawyer.
- *      500:
- *        description: Internal server error
- */
-router.post('/rate-lawyer', validateResource(userSchemas.rateLawyerSchema), requireRegistration({ userEmailField: 'rater_email', place: 'body' }), requireRegistration({ userEmailField: 'rated_email', place: 'body' }), requireUser(), userController.rateLawyer);
 
 /**
  * @openapi
@@ -204,5 +187,37 @@ router.get('/user/city', requireUser(), userController.getCityOfTheUser);
  *        description: Internal server error
  */
 router.patch('/user/:cityName', validateResource(userSchemas.updateCityOfTheUserSchema), requireUser(), userController.updateCityOfTheUser);
+
+/**
+ * @openapi
+ * '/api/rate-lawyer':
+ *  post:
+ *    tags:
+ *    - User
+ *    summary: Rate a lawyer
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/RateLawyerInput'
+ *    responses:
+ *      200:
+ *        description: Success
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: '#/components/schemas/RateLawyerResponse'
+ *      400:
+ *        description: Incorrect payload
+ *      404:
+ *        description: User not found.
+ *      409:
+ *        description: Given rater lawyer already rated the other lawyer.
+ *      500:
+ *        description: Internal server error
+ */
+router.post('/rate-lawyer', validateResource(userSchemas.rateLawyerSchema), requireRegistration({ userEmailField: 'rated_email', place: 'body' }), requireUser(), userController.rateLawyer);
+
 
 export default router;

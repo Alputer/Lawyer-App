@@ -20,11 +20,14 @@ export async function connect() {
 // const text = 'INSERT INTO users(name, email) VALUES($1, $2) RETURNING *'
 // const values = ['john', 'john.doe@gmail.com']
 
-export const query = async (text: string, params: Array<string | Date | null> ) => {
-  const start = Date.now()
-  const res = await pool.query(text, params)
-  logger.info('res.rows', res.rows)
-  const duration = Date.now() - start
-  logger.info('executed query', { text, duration, rows: res.rowCount })
-  return res
-}
+export const query = async (
+  text: string,
+  params: Array<string | Date | null>
+) => {
+  const start = Date.now();
+  const res = await pool.query(text, params);
+  logger.info("res.rows", res.rows);
+  const duration = Date.now() - start;
+  logger.info("executed query", { text, duration, rows: res.rowCount });
+  return res;
+};

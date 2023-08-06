@@ -6,7 +6,7 @@ export async function getBarsInTheCity(
     res: Response
   ) {
   
-    try {
+    try { 
         
         const {cityId} = req.params
 

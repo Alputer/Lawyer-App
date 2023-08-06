@@ -91,11 +91,6 @@ const createUserSchema = object({
  */
 
   const updateProfileSchema = object({
-    params: object({
-      userEmail: string({
-        required_error: "Email is required",
-      }).email("Not a valid email"),
-    }),
     body: object({
       age: number().min(18).max(100).nullable().optional(),
       phoneNumber: string().regex(phoneRegex).nullable().optional(),
@@ -110,16 +105,12 @@ const createUserSchema = object({
    *    RateLawyerInput:
    *      type: object
    *      required:
-   *        - rater_email
    *        - rated_email
    *        - rating
    *      properties:
-   *        rater_email:
-   *          type: string
-   *          example: test1@gmail.com
    *        rated_email:
    *          type: string
-   *          example: test2@gmail.com
+   *          example: test1@gmail.com
    *        rating:
    *          type: integer
    *          minimum: 1
@@ -134,9 +125,6 @@ const createUserSchema = object({
    */
   const rateLawyerSchema = object({
     body: object({
-      rater_email: string({
-        required_error: "Rater email is required",
-      }).email("Not a valid rater email"),
       rated_email: string({
         required_error: "Rated email is required",
       }).email("Not a valid rated email"),
@@ -174,7 +162,7 @@ const createUserSchema = object({
  *          lawyer_state:
  *            type: string
  *          average_rating:
- *            type: float    
+ *            type : float    
  */
 
   const getLawyersSchema = object({
