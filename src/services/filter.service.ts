@@ -1,4 +1,3 @@
-import { query } from "../utils/db";
 import { Lawyer } from "../schemas/user.schemas";
 
 export async function filterLawyers(

@@ -1,4 +1,4 @@
-import { object, string} from "zod";
+import { object, string } from "zod";
 
 /**
  * @openapi
@@ -24,16 +24,16 @@ import { object, string} from "zod";
  *          example: "Login successful."
  */
 
-  const loginSchema = object({
-    body: object({
-      email: string({
-        required_error: "Email is required",
-      }).email("Not a valid email"),
-      password: string({
-        required_error: "Password is required",
-      }),
-    })
-  });
+const loginSchema = object({
+  body: object({
+    email: string({
+      required_error: "Email is required",
+    }).email("Not a valid email"),
+    password: string({
+      required_error: "Password is required",
+    }),
+  }),
+});
 
 /**
  * @openapi
@@ -55,13 +55,13 @@ import { object, string} from "zod";
  *          example: "Verification code has been sent successfully"
  */
 
-  const sendVerificationEmailSchema = object({
-    body: object({
-      email: string({
-        required_error: "Email is required",
-      }).email("Not a valid email"),
-    })
-  });
+const sendVerificationEmailSchema = object({
+  body: object({
+    email: string({
+      required_error: "Email is required",
+    }).email("Not a valid email"),
+  }),
+});
 
 /**
  * @openapi
@@ -87,16 +87,16 @@ import { object, string} from "zod";
  *          example: "Email verified successfully"
  */
 
-  const verifyEmailSchema = object({
-    body: object({
-      email: string({
-        required_error: "Email is required",
-      }).email("Not a valid email"),
-      verificationCode: string({
-        required_error: "Verification Code is required",
-      }),
-    })
-  });
+const verifyEmailSchema = object({
+  body: object({
+    email: string({
+      required_error: "Email is required",
+    }).email("Not a valid email"),
+    verificationCode: string({
+      required_error: "Verification Code is required",
+    }),
+  }),
+});
 
 /**
  * @openapi
@@ -118,13 +118,13 @@ import { object, string} from "zod";
  *          example: "eyJhbGciOiJIUzI1NiJ9.YWxwLnR1bmEuNDUzQGdtYWlsLmNvbQ.xrspUFhtq9pIbDwJR7z1AnR2ZcyPWnGONme4DratQfI"
  */
 
-  const refreshTokenSchema = object({
-    body: object({
-      email: string({
-        required_error: "Email is required",
-      }).email("Not a valid email"),
-    })
-  });
+const refreshTokenSchema = object({
+  body: object({
+    email: string({
+      required_error: "Email is required",
+    }).email("Not a valid email"),
+  }),
+});
 
 /**
  * @openapi
@@ -146,13 +146,13 @@ import { object, string} from "zod";
  *          example: "Password update successful."
  */
 
-  const updatePasswordSchema = object({
-    body: object({
-      newPassword: string({
-        required_error: "New password is required",
-      }).min(6, "Password too short - should be 6 chars minimum"),
-    })
-  });
+const updatePasswordSchema = object({
+  body: object({
+    newPassword: string({
+      required_error: "New password is required",
+    }).min(6, "Password too short - should be 6 chars minimum"),
+  }),
+});
 
 /**
  * @openapi
@@ -174,13 +174,13 @@ import { object, string} from "zod";
  *          example: "Password reset token sent to the email address."
  */
 
-  const forgotPasswordSchema = object({
-    body: object({
-      email: string({
-        required_error: "Email is required",
-      }).email("Not a valid email"),
-    })
-  });
+const forgotPasswordSchema = object({
+  body: object({
+    email: string({
+      required_error: "Email is required",
+    }).email("Not a valid email"),
+  }),
+});
 
 /**
  * @openapi
@@ -210,19 +210,19 @@ import { object, string} from "zod";
  *          example: "Password reset successful."
  */
 
-  const resetPasswordSchema = object({
-    body: object({
-      email: string({
-        required_error: "Email is required",
-      }).email("Not a valid email"),
-      newPassword: string({
-        required_error: "New password is required",
-      }),
-      resetToken: string({
-        required_error: "Reset token is required",
-      }),
-    })
-  });
+const resetPasswordSchema = object({
+  body: object({
+    email: string({
+      required_error: "Email is required",
+    }).email("Not a valid email"),
+    newPassword: string({
+      required_error: "New password is required",
+    }),
+    resetToken: string({
+      required_error: "Reset token is required",
+    }),
+  }),
+});
 
 export type LoginInput = {
   email: string;
@@ -233,4 +233,12 @@ export type SaveVerificationCodeInput = {
   verificationCode: string;
 };
 
-export default {loginSchema, sendVerificationEmailSchema, refreshTokenSchema, updatePasswordSchema, forgotPasswordSchema, resetPasswordSchema, verifyEmailSchema};
+export default {
+  loginSchema,
+  sendVerificationEmailSchema,
+  refreshTokenSchema,
+  updatePasswordSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+  verifyEmailSchema,
+};

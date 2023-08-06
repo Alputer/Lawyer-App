@@ -1,4 +1,4 @@
-import { z, object, string, number, TypeOf } from "zod";
+import { object, string } from "zod";
 
 const intRegex = new RegExp(/^\d+$/);
 /**

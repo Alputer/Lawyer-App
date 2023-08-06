@@ -45,11 +45,9 @@ export async function acceptOffer(req: Request, res: Response) {
 
     const isDismissed = await offerService.isDismissed(offerId);
     if (isDismissed) {
-      return res
-        .status(409)
-        .json({
-          error: `Offer with id '${offerId}' is already dismissed, possibly because another lawyer has already accepted the offer`,
-        });
+      return res.status(409).json({
+        error: `Offer with id '${offerId}' is already dismissed, possibly because another lawyer has already accepted the offer`,
+      });
     }
 
     await offerService.acceptOffer(offerId, executorCandidate);
@@ -84,11 +82,9 @@ export async function rejectOffer(req: Request, res: Response) {
 
     const isDismissed = await offerService.isDismissed(offerId);
     if (isDismissed) {
-      return res
-        .status(409)
-        .json({
-          error: `Offer with id '${offerId}' is already dismissed, possibly because another lawyer has already accepted the offer`,
-        });
+      return res.status(409).json({
+        error: `Offer with id '${offerId}' is already dismissed, possibly because another lawyer has already accepted the offer`,
+      });
     }
 
     await offerService.rejectOffer(offerId, receiver);

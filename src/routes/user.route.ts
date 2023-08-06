@@ -1,9 +1,9 @@
-import express from 'express';
-import userSchemas from '../schemas/user.schemas';
-import userController from '../controllers/user.controller';
-import validateResource from '../middlewares/validateResource';
-import requireRegistration from '../middlewares/requireRegistration';
-import requireUser from '../middlewares/requireUser';
+import express from "express";
+import userSchemas from "../schemas/user.schemas";
+import userController from "../controllers/user.controller";
+import validateResource from "../middlewares/validateResource";
+import requireRegistration from "../middlewares/requireRegistration";
+import requireUser from "../middlewares/requireUser";
 
 const router = express.Router();
 
@@ -34,7 +34,11 @@ const router = express.Router();
  *      500:
  *        description: Internal server error
  */
-router.post('/user', validateResource(userSchemas.createUserSchema), userController.register);
+router.post(
+  "/user",
+  validateResource(userSchemas.createUserSchema),
+  userController.register
+);
 
 /**
  * @openapi
@@ -84,7 +88,12 @@ router.post('/user', validateResource(userSchemas.createUserSchema), userControl
  *        description: Internal server error
  */
 
-router.get('/lawyers/:barId', validateResource(userSchemas.getLawyersSchema), requireUser(), userController.getLawyers);
+router.get(
+  "/lawyers/:barId",
+  validateResource(userSchemas.getLawyersSchema),
+  requireUser(),
+  userController.getLawyers
+);
 
 /**
  * @openapi
@@ -134,9 +143,18 @@ router.get('/lawyers/:barId', validateResource(userSchemas.getLawyersSchema), re
  *      500:
  *        description: Internal server error
  */
-router.get('/user-profile/:userEmail', validateResource(userSchemas.getUserProfileSchema), requireUser(), userController.getUserProfile);
-router.put('/user-profile', validateResource(userSchemas.updateProfileSchema), requireUser(), userController.updateProfile);
-
+router.get(
+  "/user-profile/:userEmail",
+  validateResource(userSchemas.getUserProfileSchema),
+  requireUser(),
+  userController.getUserProfile
+);
+router.put(
+  "/user-profile",
+  validateResource(userSchemas.updateProfileSchema),
+  requireUser(),
+  userController.updateProfile
+);
 
 /**
  * @openapi
@@ -157,7 +175,7 @@ router.put('/user-profile', validateResource(userSchemas.updateProfileSchema), r
  *      500:
  *        description: Internal server error
  */
-router.get('/user/city', requireUser(), userController.getCityOfTheUser);
+router.get("/user/city", requireUser(), userController.getCityOfTheUser);
 
 /**
  * @openapi
@@ -186,7 +204,12 @@ router.get('/user/city', requireUser(), userController.getCityOfTheUser);
  *      500:
  *        description: Internal server error
  */
-router.patch('/user/:cityName', validateResource(userSchemas.updateCityOfTheUserSchema), requireUser(), userController.updateCityOfTheUser);
+router.patch(
+  "/user/:cityName",
+  validateResource(userSchemas.updateCityOfTheUserSchema),
+  requireUser(),
+  userController.updateCityOfTheUser
+);
 
 /**
  * @openapi
@@ -217,7 +240,12 @@ router.patch('/user/:cityName', validateResource(userSchemas.updateCityOfTheUser
  *      500:
  *        description: Internal server error
  */
-router.post('/rate-lawyer', validateResource(userSchemas.rateLawyerSchema), requireRegistration({ userEmailField: 'rated_email', place: 'body' }), requireUser(), userController.rateLawyer);
-
+router.post(
+  "/rate-lawyer",
+  validateResource(userSchemas.rateLawyerSchema),
+  requireRegistration({ userEmailField: "rated_email", place: "body" }),
+  requireUser(),
+  userController.rateLawyer
+);
 
 export default router;

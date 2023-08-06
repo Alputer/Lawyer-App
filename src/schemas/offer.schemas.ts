@@ -1,4 +1,4 @@
-import { z, object, string, coerce } from "zod";
+import { object, string } from "zod";
 
 /**
  * @openapi

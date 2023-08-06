@@ -1,11 +1,5 @@
 import { Request, Response } from "express";
-import {
-  authService,
-  userService,
-  locationService,
-  tokenService,
-  mailService,
-} from "../services";
+import { locationService } from "../services";
 
 export async function getCities(req: Request, res: Response) {
   try {
