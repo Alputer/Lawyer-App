@@ -1,6 +1,5 @@
-import { SaveVerificationCodeInput } from "../schemas/auth.schemas";
-import { query } from "../utils/db";
 import bcrypt from "bcrypt";
+import Lawyer from "../models/lawyer.model";
 
 export const hashPassword = async (password: string): Promise<string> => {
   const saltRounds = 10;
@@ -12,13 +11,19 @@ export const comparePasswords = async (credentials: {
   email: string;
   password: string;
 }): Promise<boolean> => {
-  const queryResult = await query(
-    "SELECT L.password_hash FROM Lawyers L WHERE L.email = $1",
-    [credentials.email]
-  );
-  const hashedPassword = queryResult.rows[0].password_hash;
+  const lawyer = await Lawyer.findOne({
+    attributes: ["password_hash"],
+    where: { email: credentials.email },
+  });
 
-  const isMatch = await bcrypt.compare(credentials.password, hashedPassword);
+  if (!lawyer) {
+    return false;
+  }
+
+  const isMatch = await bcrypt.compare(
+    credentials.password,
+    lawyer.password_hash
+  );
   return isMatch;
 };
 
@@ -26,50 +31,50 @@ export const changePassword = async (
   email: string,
   newPassword: string
 ): Promise<void> => {
-  // Hash the new password before updating it in the database
   const hashedPassword = await hashPassword(newPassword);
-  // Update the user's password in the database
-  await query("UPDATE Lawyers SET password_hash = $1 WHERE email = $2", [
-    hashedPassword,
-    email,
-  ]);
 
-  return;
+  await Lawyer.update({ password_hash: hashedPassword }, { where: { email } });
 };
 
-export async function saveVerificationCode(input: SaveVerificationCodeInput) {
-  await query(
-    "UPDATE lawyers L SET verification_code = $1 WHERE L.email = $2",
-    [input.verificationCode, input.email]
+export const saveVerificationCode = async (input: {
+  email: string;
+  verificationCode: string;
+}): Promise<void> => {
+  await Lawyer.update(
+    { verification_code: input.verificationCode },
+    { where: { email: input.email } }
   );
-  return;
-}
+};
 
-export async function checkVerificationCode(
+export const checkVerificationCode = async (
   email: string,
   verificationCode: string
-) {
-  const queryResult = await query(
-    "SELECT verification_code FROM Lawyers L WHERE L.email = $1",
-    [email]
-  );
+): Promise<boolean> => {
+  const lawyer = await Lawyer.findOne({
+    attributes: ["verification_code"],
+    where: { email },
+  });
 
-  return queryResult.rows[0].verification_code === verificationCode;
-}
-export async function makeUserVerified(email: string) {
-  await query("UPDATE Lawyers SET is_validated = true WHERE email = $1", [
-    email,
-  ]);
+  if (!lawyer) {
+    return false;
+  }
 
-  return;
-}
+  return lawyer.verification_code === verificationCode;
+};
 
-export async function isValidated(email: string) {
-  const queryResult = await query(
-    "SELECT L.is_validated FROM Lawyers L WHERE L.email = $1",
-    [email]
-  );
-  const isValidated = queryResult.rows[0].is_validated;
+export const makeUserVerified = async (email: string): Promise<void> => {
+  await Lawyer.update({ is_validated: true }, { where: { email } });
+};
 
-  return isValidated;
-}
+export const isValidated = async (email: string): Promise<boolean> => {
+  const lawyer = await Lawyer.findOne({
+    attributes: ["is_validated"],
+    where: { email },
+  });
+
+  if (!lawyer) {
+    return false;
+  }
+
+  return lawyer.is_validated;
+};

@@ -64,7 +64,11 @@ router.post(
  *      400:
  *        description: Incorrect payload
  *      403:
- *        description: Invalid or expired access token
+ *        description: Invalid/expired access token or you are not authorized to accept this offer
+ *      404:
+ *        description: Offer could not found
+ *      409:
+ *        description: Offer is dismissed
  *      500:
  *        description: Internal server error
  */
@@ -99,7 +103,11 @@ router.post(
  *      400:
  *        description: Incorrect payload
  *      403:
- *        description: Invalid or expired access token
+ *        description: Invalid/expired access token or you are not authorized to accept this offer
+ *      404:
+ *        description: Offer could not found
+ *      409:
+ *        description: Offer is dismissed
  *      500:
  *        description: Internal server error
  */

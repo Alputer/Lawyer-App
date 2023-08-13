@@ -1,22 +1,22 @@
-import { query } from "../utils/db";
+import City from "../models/city.model";
 
 export async function cityWithIdExists(cityId: string) {
-  const queryResult = await query("SELECT * FROM Cities WHERE city_id = $1", [
-    cityId,
-  ]);
-  return queryResult.rowCount > 0;
+  const city = await City.findOne({
+    where: { city_id: cityId },
+  });
+  return !!city;
 }
 
 export async function cityWithNameExists(cityName: string) {
-  const queryResult = await query("SELECT * FROM Cities WHERE city_name = $1", [
-    cityName,
-  ]);
-  return queryResult.rowCount > 0;
+  const city = await City.findOne({
+    where: { city_name: cityName },
+  });
+  return !!city;
 }
 
-// There might be duplicate city names. For now, do not handle them.
 export async function getCities() {
-  const queryResult = await query("SELECT city_name FROM Cities", []);
-  const cities = queryResult.rows.map((cityObject) => cityObject.city_name);
-  return cities;
+  const cities = await City.findAll({
+    attributes: ["city_name"],
+  });
+  return cities.map((city: { city_name: any }) => city.city_name);
 }

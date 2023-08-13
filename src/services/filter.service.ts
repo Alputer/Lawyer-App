@@ -1,4 +1,5 @@
-import { Lawyer } from "../schemas/user.schemas";
+import { LAWYER_STATE } from "../enums/lawyer.enum";
+import Lawyer from "../models/lawyer.model";
 
 export async function filterLawyers(
   allLawyers: Array<Lawyer>,
@@ -10,17 +11,17 @@ export async function filterLawyers(
 
   if (availability === "True") {
     filtered_lawyers = filtered_lawyers.filter(
-      (lawyer) => lawyer.lawyer_state === "free"
+      (lawyer) => lawyer.lawyer_state === LAWYER_STATE.FREE
     );
   }
   if (minRating) {
     filtered_lawyers = filtered_lawyers.filter(
-      (lawyer) => lawyer.average_rating >= minRating
+      (lawyer) => lawyer.average_rating && lawyer.average_rating >= minRating
     );
   }
   if (maxRating) {
     filtered_lawyers = filtered_lawyers.filter(
-      (lawyer) => lawyer.average_rating <= maxRating
+      (lawyer) => lawyer.average_rating && lawyer.average_rating <= maxRating
     );
   }
 

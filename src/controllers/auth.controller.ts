@@ -66,6 +66,7 @@ export async function sendVerificationEmail(req: Request, res: Response) {
 
     return res.status(200).json({
       message: "Verification code has been sent successfully",
+      verificationCode: verificationCode,
     });
   } catch (e: any) {
     console.log(e);
@@ -86,9 +87,7 @@ export async function verifyEmail(req: Request, res: Response) {
       await authService.makeUserVerified(email);
       return res.status(200).json({ message: "Email verified successfully" });
     } else {
-      return res
-        .status(400)
-        .json({ error: "Invalid email or verification code." });
+      return res.status(401).json({ error: "Invalid verification code." });
     }
   } catch (err) {
     console.error("Error verifying email:", err);
@@ -110,17 +109,17 @@ export async function refreshToken(req: Request, res: Response) {
 
       if (!decoded) {
         // Wrong Refresh Token
-        return res.status(406).json({ message: "Unauthorized" });
+        return res.status(401).json({ message: "Invalid refresh token" });
       }
 
       const accessToken = tokenService.signJwt(
-        req.body.email,
+        decoded.email,
         "accessTokenPrivateKey"
       );
 
       return res.status(200).json({ accessToken });
     } else {
-      return res.status(406).json({ message: "Unauthorized" });
+      return res.status(400).json({ message: "No refresh token in cookie" });
     }
   } catch (error) {
     console.error("Error while getting access token:", error);
@@ -159,9 +158,10 @@ export async function forgotPassword(req: Request, res: Response) {
 
     await mailService.sendEmail(mailOptions);
 
-    res
-      .status(200)
-      .json({ message: "Password reset token sent to the email address." });
+    res.status(200).json({
+      message: "Password reset token sent to the email address.",
+      resetToken: resetToken,
+    });
   } catch (error) {
     console.error("Error sending reset token:", error);
     res.status(500).json({ error: "An internal server error occurred." });

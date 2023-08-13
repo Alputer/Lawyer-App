@@ -29,6 +29,8 @@ const router = express.Router();
  *              $ref: '#/components/schemas/CreateUserResponse'
  *      400:
  *        description: Incorrect payload
+ *      404:
+ *        description: Bar does not exist
  *      409:
  *        description: User with given email already exists
  *      500:
@@ -123,6 +125,8 @@ router.get(
  *        description: User not found.
  *      500:
  *        description: Internal server error
+ *
+ * '/api/user-profile':
  *  put:
  *    tags:
  *    - User
@@ -170,6 +174,8 @@ router.put(
  *          application/json:
  *            schema:
  *              $ref: '#/components/schemas/GetUserCityResponse'
+ *      403:
+ *        description: Invalid or expired access token
  *      404:
  *        description: User or city not found.
  *      500:
@@ -199,8 +205,10 @@ router.get("/user/city", requireUser(), userController.getCityOfTheUser);
  *              $ref: '#/components/schemas/UpdateUserCityResponse'
  *      400:
  *        description: Incorrect payload
+ *      403:
+ *        description: Invalid or expired access token
  *      404:
- *        description: User or city not found.
+ *        description: City not found.
  *      500:
  *        description: Internal server error
  */
@@ -233,6 +241,8 @@ router.patch(
  *              $ref: '#/components/schemas/RateLawyerResponse'
  *      400:
  *        description: Incorrect payload
+ *      403:
+ *        description: Lawyer cannot rate himself/herself
  *      404:
  *        description: User not found.
  *      409:

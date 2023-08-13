@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import config from "config";
 import { LoginInput } from "../schemas/auth.schemas";
-import { query } from "../utils/db";
+import Lawyer from "../models/lawyer.model";
 const crypto = require("crypto");
 
 export function generateLoginTokens(payload: LoginInput): {
@@ -24,26 +24,52 @@ export function generateLoginTokens(payload: LoginInput): {
 export async function generateAndSaveResetToken(email: string) {
   const tokenLength = 24;
   const resetToken = crypto.randomBytes(tokenLength).toString("hex");
-  await query("UPDATE Lawyers SET reset_token = $1 WHERE email = $2", [
-    resetToken,
-    email,
-  ]);
+
+  const [updatedRowsCount] = await Lawyer.update(
+    { reset_token: resetToken },
+    {
+      where: {
+        email: email,
+      },
+    }
+  );
+
+  if (updatedRowsCount === 0) {
+    throw new Error("User not found");
+  }
+
   return resetToken;
 }
 
-export const getResetToken = async (email: string): Promise<void> => {
-  const queryResult = await query(
-    "SELECT reset_token FROM Lawyers WHERE email = $1",
-    [email]
+export async function getResetToken(email: string): Promise<string | null> {
+  const user = await Lawyer.findOne({
+    where: {
+      email: email,
+    },
+    attributes: ["reset_token"],
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return user.reset_token;
+}
+
+export async function deleteResetToken(email: string): Promise<void> {
+  const [updatedRowsCount] = await Lawyer.update(
+    { reset_token: null },
+    {
+      where: {
+        email: email,
+      },
+    }
   );
-  return queryResult.rows[0].reset_token;
-};
-export const deleteResetToken = async (email: string): Promise<void> => {
-  await query("UPDATE Lawyers SET reset_token = NULL WHERE email = $1", [
-    email,
-  ]);
-  return;
-};
+
+  if (updatedRowsCount === 0) {
+    throw new Error("User not found");
+  }
+}
 
 export function signJwt(
   object: Object, // our payload

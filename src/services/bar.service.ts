@@ -1,18 +1,22 @@
-import { query } from "../utils/db";
+import Bar from "../models/bar.model";
 
 export async function barExists(barId: string) {
-  const queryResult = await query("SELECT * FROM Bars WHERE bar_id = $1", [
-    barId,
-  ]);
-  return queryResult.rowCount > 0;
+  const bar = await Bar.findOne({
+    where: {
+      bar_id: barId,
+    },
+  });
+
+  return bar !== null;
 }
 
-// There might be duplicate city names. For now, do not handle them.
 export async function getBars(cityId: string) {
-  const queryResult = await query(
-    "SELECT bar_name FROM Bars WHERE city_id = $1",
-    [cityId]
-  );
-  const bars = queryResult.rows.map((barObject) => barObject.bar_name);
-  return bars;
+  const bars = await Bar.findAll({
+    attributes: ["bar_name"],
+    where: {
+      city_id: cityId,
+    },
+  });
+
+  return bars.map((bar: { bar_name: any }) => bar.bar_name);
 }

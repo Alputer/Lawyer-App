@@ -1,31 +1,40 @@
 import { Request, Response, NextFunction } from "express";
-import { query } from "../utils/db";
+import Lawyer from "../models/lawyer.model";
 
-const requireRegistration =
-  (_: { userEmailField: string; place: string }) =>
+interface MiddlewareOptions {
+  userEmailField: string;
+  place: string;
+}
+
+export const requireRegistration =
+  ({ userEmailField, place }: MiddlewareOptions) =>
   async (req: Request, res: Response, next: NextFunction) => {
-    let email = req.body[_.userEmailField];
-    if (_.place === "body") {
-      email = req.body[_.userEmailField];
-    }
-    if (_.place === "params") {
-      email = req.params[_.userEmailField];
-    }
+    let email: string;
 
-    const queryResult = await query(
-      "SELECT * FROM Lawyers L WHERE L.email = $1",
-      [email]
-    );
-
-    const userExists = queryResult.rowCount == 1;
-
-    if (!userExists) {
-      console.log("here");
-      console.log(email);
-      return res.status(404).json({ error: "User not found" });
+    if (place === "body") {
+      email = req.body[userEmailField];
+    } else if (place === "params") {
+      email = req.params[userEmailField];
+    } else {
+      return res.status(400).json({ error: "Invalid place specified" });
     }
 
-    return next();
+    try {
+      const user = await Lawyer.findOne({
+        where: {
+          email: email,
+        },
+      });
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      return next();
+    } catch (error) {
+      console.error("Error checking user registration:", error);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
   };
 
 export default requireRegistration;

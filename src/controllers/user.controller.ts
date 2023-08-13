@@ -6,6 +6,7 @@ import {
   locationService,
   filterService,
 } from "../services";
+import { BasicLawyer } from "../models/lawyer.model";
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -14,6 +15,12 @@ export async function register(req: Request, res: Response) {
 
   try {
     const verificationCode = uuidv4();
+    const barExists = await barService.barExists(body.barId);
+    if (!barExists) {
+      return res
+        .status(404)
+        .json({ error: `Bar with id '${body.barId}' could not found` });
+    }
 
     await userService.createUser(body, verificationCode);
 
@@ -28,9 +35,10 @@ export async function register(req: Request, res: Response) {
 
     return res.status(200).json({
       message: "User successfully created",
+      verificationCode: verificationCode,
     });
   } catch (e: any) {
-    if (e.code === "23505") {
+    if (e.parent.code === "23505") {
       return res.status(409).json({
         message: "Account already exists",
       });
@@ -61,8 +69,21 @@ export async function getLawyers(req: Request, res: Response) {
       parseFloat(minRating as string),
       parseFloat(maxRating as string)
     );
+    const filtered_basic_lawyers = filtered_lawyers.map(
+      (lawyer: BasicLawyer) => {
+        const basicLawyer: BasicLawyer = {
+          email: lawyer.email,
+          firstname: lawyer.firstname,
+          lastname: lawyer.lastname,
+          bar_id: lawyer.bar_id,
+          lawyer_state: lawyer.lawyer_state,
+          average_rating: lawyer.average_rating,
+        };
+        return basicLawyer;
+      }
+    );
 
-    return res.status(200).json({ lawyers: filtered_lawyers });
+    return res.status(200).json({ lawyers: filtered_basic_lawyers });
   } catch (e: any) {
     console.error("Error getting available lawyers in the bar:", e);
     res.status(500).json({ error: "An internal server error occurred." });
@@ -89,7 +110,7 @@ export async function getUserProfile(req: Request, res: Response) {
 
 export async function updateProfile(req: Request, res: Response) {
   try {
-    const { email } = res.locals.user.email;
+    const email = res.locals.user.email;
     const { age, phoneNumber, linkedinUrl } = req.body;
 
     await userService.updateProfile(email, age, phoneNumber, linkedinUrl);
@@ -148,8 +169,8 @@ export async function rateLawyer(req: Request, res: Response) {
     const { rated_email, rating } = req.body;
 
     if (rater_email === rated_email) {
-      return res.status(400).json({
-        message: "Lawyer cannot rate himself",
+      return res.status(403).json({
+        message: "Lawyer cannot rate himself/herself",
       });
     }
 

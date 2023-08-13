@@ -40,6 +40,9 @@ const phoneRegex = new RegExp(
  *        message:
  *          type: string
  *          example: "User successfully created"
+ *        verificationCode:
+ *          type: string
+ *          example: "8ad731fa-b4ce-45ce-a7c5-70b732cf6bf1"
  */
 const createUserSchema = object({
   body: object({
@@ -58,6 +61,9 @@ const createUserSchema = object({
     email: string({
       required_error: "Email is required",
     }).email("Not a valid email"),
+    barId: number({
+      required_error: "Bar ID required",
+    }),
   }).refine((data) => data.password === data.passwordConfirmation, {
     message: "Passwords do not match",
     path: ["passwordConfirmation"],
@@ -153,16 +159,22 @@ const rateLawyerSchema = object({
  *        properties:
  *          email:
  *            type: string
+ *            example: "john.doe@gmail.com"
  *          firstname:
  *            type: string
+ *            example: "john"
  *          lastname:
  *            type: string
+ *            example: "doe"
  *          bar_id:
  *            type: integer
+ *            example: 5
  *          lawyer_state:
  *            type: string
+ *            example: "busy"
  *          average_rating:
- *            type : float
+ *            type: double
+ *            example: 3.8
  */
 
 const getLawyersSchema = object({
@@ -179,6 +191,7 @@ const getLawyersSchema = object({
 /**
  * @openapi
  * components:
+ *  schemas:
  *    GetProfileResponse:
  *      type: object
  *      required:
@@ -188,12 +201,15 @@ const getLawyersSchema = object({
  *      properties:
  *        age:
  *          type: integer
+ *          nullable: true
  *          example: 25
  *        phone_number:
  *          type: string
+ *          nullable: true
  *          example: "+905323456789"
  *        linkedin_url:
  *          type: string
+ *          nullable: true
  *          example: https://www.linkedin.com/in/alptuna/
  */
 
@@ -235,15 +251,6 @@ export type CreateUserInput = Omit<
   TypeOf<typeof createUserSchema>["body"],
   "passwordConfirmation"
 >;
-
-export interface Lawyer {
-  email: string;
-  firstname: string;
-  lastname: string;
-  bar_id: string;
-  lawyer_state: string;
-  average_rating: number;
-}
 
 export default {
   createUserSchema,

@@ -1,36 +1,43 @@
-import { query } from "../utils/db";
+import Job from "../models/job.model";
 
-const { v4: uuidv4 } = require("uuid");
-
-export async function jobExists(jobId: string) {
-  const queryResult = await query("SELECT * FROM Jobs WHERE job_id = $1", [
-    jobId,
-  ]);
-  return queryResult.rowCount > 0;
+export async function jobExists(jobId: string): Promise<boolean> {
+  const job = await Job.findOne({
+    where: {
+      job_id: jobId,
+    },
+  });
+  return !!job;
 }
 
 export async function setExecutor(
   jobId: string,
   executor: string,
   responseDate: Date
-) {
-  await query(
-    "UPDATE Jobs SET executor = $1, job_status = 'ongoing', start_date = $2 WHERE job_id = $3",
-    [executor, responseDate, jobId]
+): Promise<void> {
+  await Job.update(
+    {
+      executor,
+      job_status: "ongoing",
+      start_date: responseDate,
+    },
+    {
+      where: {
+        id: jobId,
+      },
+    }
   );
-  return;
 }
 
 export async function createJob(
   requester: string,
   jobDescription: string,
   dueDate: Date
-) {
-  const jobId = uuidv4();
+): Promise<void> {
   const createDate = new Date();
-  await query(
-    "INSERT INTO Jobs (job_id, requester, job_description, create_date, due_date) VALUES ($1, $2, $3, $4, $5)",
-    [jobId, requester, jobDescription, createDate, dueDate?.toString()]
-  );
-  return;
+  await Job.create({
+    requester: requester,
+    job_description: jobDescription,
+    create_date: createDate,
+    due_date: dueDate,
+  });
 }

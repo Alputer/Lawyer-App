@@ -49,10 +49,16 @@ const loginSchema = object({
  *          example: "johnDoe@gmail.com"
  *    SendVerificationEmailResponse:
  *      type: object
+ *      required:
+ *        - message
+ *        - verificationCode
  *      properties:
  *        message:
  *          type: string
  *          example: "Verification code has been sent successfully"
+ *        verificationCode:
+ *          type: string
+ *          example: "8ad731fa-b4ce-45ce-a7c5-70b732cf6bf1"
  */
 
 const sendVerificationEmailSchema = object({
@@ -102,14 +108,6 @@ const verifyEmailSchema = object({
  * @openapi
  * components:
  *  schemas:
- *    RefreshTokenInput:
- *      type: object
- *      required:
- *        - email
- *      properties:
- *        email:
- *          type: string
- *          example: "johnDoe@gmail.com"
  *    RefreshTokenResponse:
  *      type: object
  *      properties:
@@ -172,6 +170,9 @@ const updatePasswordSchema = object({
  *        message:
  *          type: string
  *          example: "Password reset token sent to the email address."
+ *        resetToken:
+ *          type: string
+ *          example: "48166d33df79a335a16a4526a208b32c477697226087314f"
  */
 
 const forgotPasswordSchema = object({
@@ -205,7 +206,7 @@ const forgotPasswordSchema = object({
  *    ResetPasswordResponse:
  *      type: object
  *      properties:
- *        messagge:
+ *        message:
  *          type: string
  *          example: "Password reset successful."
  */
@@ -217,7 +218,7 @@ const resetPasswordSchema = object({
     }).email("Not a valid email"),
     newPassword: string({
       required_error: "New password is required",
-    }),
+    }).min(6, "Password too short - should be 6 chars minimum"),
     resetToken: string({
       required_error: "Reset token is required",
     }),

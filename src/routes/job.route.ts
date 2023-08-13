@@ -12,7 +12,7 @@ const router = express.Router();
  *  post:
  *     tags:
  *     - Job
- *     summary: Register a user
+ *     summary: Create a new job
  *     requestBody:
  *      required: true
  *      content:
