@@ -163,7 +163,7 @@ export async function rateLawyer(req: Request, res: Response) {
       message: "Lawyer is successfully rated",
     });
   } catch (e: any) {
-    if (e.code === "23505") {
+    if (e.parent.code === "23505") {
       return res.status(409).json({
         message: "Rater lawyer already rated this lawyer",
       });
