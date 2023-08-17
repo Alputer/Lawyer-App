@@ -13,7 +13,7 @@ const intRegex = new RegExp(/^\d+$/);
  */
 
 const getBarsInTheCitySchema = object({
-  params: object({
+  query: object({
     cityId: string().regex(intRegex),
   }),
 });

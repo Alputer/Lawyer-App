@@ -18,6 +18,14 @@ export async function getReceiver(offerId: string) {
   return offer?.receiver;
 }
 
+export async function getOffer(offerId: string) {
+  const offer = await Offer.findOne({
+    where: { offer_id: offerId },
+    attributes: ["receiver", "offer_status"],
+  });
+  return offer;
+}
+
 export async function offerExists(offerId: string) {
   const count = await Offer.count({ where: { offer_id: offerId } });
   return count > 0;

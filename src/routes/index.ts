@@ -15,32 +15,32 @@ interface Route {
 
 const defaultRoutes: Route[] = [
   {
-    path: "/",
+    path: "/auth",
     route: authRoute,
   },
 
   {
-    path: "/",
+    path: "/user",
     route: userRoute,
   },
 
   {
-    path: "/",
+    path: "/city",
     route: locationRoute,
   },
 
   {
-    path: "/",
+    path: "/bar",
     route: barRoute,
   },
 
   {
-    path: "/",
+    path: "/job",
     route: jobRoute,
   },
 
   {
-    path: "/",
+    path: "/offer",
     route: offerRoute,
   },
 ];

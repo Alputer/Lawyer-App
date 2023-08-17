@@ -35,7 +35,7 @@ const router = express.Router();
  */
 
 router.post(
-  "/job",
+  "/",
   validateResource(jobSchemas.createJobSchema),
   requireUser(),
   jobController.createJob

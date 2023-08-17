@@ -6,7 +6,6 @@ import {
   locationService,
   filterService,
 } from "../services";
-import { BasicLawyer } from "../models/lawyer.model";
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -35,7 +34,6 @@ export async function register(req: Request, res: Response) {
 
     return res.status(200).json({
       message: "User successfully created",
-      verificationCode: verificationCode,
     });
   } catch (e: any) {
     if (e.parent.code === "23505") {
@@ -50,42 +48,29 @@ export async function register(req: Request, res: Response) {
 
 export async function getLawyers(req: Request, res: Response) {
   try {
-    const { barId } = req.params;
-    const { availability, minRating, maxRating, sort } = req.query;
+    const { availability, barId, minRating, maxRating, sort } = req.query;
 
-    const barExists = await barService.barExists(barId);
-    if (!barExists) {
-      return res
-        .status(404)
-        .json({ error: `Bar with id '${barId}' could not found` });
+    if (barId) {
+      const barExists = await barService.barExists(barId);
+      if (!barExists) {
+        return res
+          .status(404)
+          .json({ error: `Bar with id '${barId}' could not found` });
+      }
     }
 
-    let lawyers = [];
-
-    const all_lawyers = await userService.getLawyers(barId, sort);
+    const all_lawyers = await userService.getLawyers(sort);
     const filtered_lawyers = await filterService.filterLawyers(
       all_lawyers,
+      parseInt(barId as string),
       availability,
       parseFloat(minRating as string),
       parseFloat(maxRating as string)
     );
-    const filtered_basic_lawyers = filtered_lawyers.map(
-      (lawyer: BasicLawyer) => {
-        const basicLawyer: BasicLawyer = {
-          email: lawyer.email,
-          firstname: lawyer.firstname,
-          lastname: lawyer.lastname,
-          bar_id: lawyer.bar_id,
-          lawyer_state: lawyer.lawyer_state,
-          average_rating: lawyer.average_rating,
-        };
-        return basicLawyer;
-      }
-    );
 
-    return res.status(200).json({ lawyers: filtered_basic_lawyers });
+    return res.status(200).json({ lawyers: filtered_lawyers });
   } catch (e: any) {
-    console.error("Error getting available lawyers in the bar:", e);
+    console.error("Error getting lawyers", e);
     res.status(500).json({ error: "An internal server error occurred." });
   }
 }
@@ -94,12 +79,10 @@ export async function getUserProfile(req: Request, res: Response) {
   try {
     const { userEmail } = req.params;
 
-    const userExists = await userService.userExists(userEmail);
-    if (!userExists) {
+    const user_profile = await userService.getUserProfile(userEmail);
+    if (!user_profile) {
       return res.status(404).json({ error: "User not found" });
     }
-
-    const user_profile = await userService.getUserProfile(userEmail);
 
     return res.status(200).json({ user_profile: user_profile });
   } catch (e: any) {
@@ -126,7 +109,7 @@ export async function updateProfile(req: Request, res: Response) {
 
 export async function getCityOfTheUser(req: Request, res: Response) {
   try {
-    const userEmail = res.locals.user.email;
+    const { userEmail } = req.params;
 
     const user_location = await userService.getUserLocation(userEmail);
     if (!user_location) {
@@ -143,16 +126,16 @@ export async function getCityOfTheUser(req: Request, res: Response) {
 export async function updateCityOfTheUser(req: Request, res: Response) {
   try {
     const userEmail = res.locals.user.email;
-    const { cityName } = req.params;
+    const { cityId } = req.body;
 
-    const cityExists = await locationService.cityWithNameExists(cityName);
+    const cityExists = await locationService.cityWithIdExists(cityId);
     if (!cityExists) {
       return res
         .status(404)
-        .json({ error: `City with name '${cityName}' could not found` });
+        .json({ error: `City with id '${cityId}' could not found` });
     }
 
-    await userService.updateUserLocation(userEmail, cityName);
+    await userService.updateUserLocation(userEmail, cityId);
 
     return res.status(200).json({
       message: "User's location is successfully updated",

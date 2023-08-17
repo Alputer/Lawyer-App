@@ -37,30 +37,31 @@ const router = express.Router();
  *        description: Internal server error
  */
 router.post(
-  "/user",
+  "/",
   validateResource(userSchemas.createUserSchema),
   userController.register
 );
 
 /**
  * @openapi
- * '/api/lawyers/:barId':
+ * '/api/user':
  *  get:
  *    tags:
  *    - User
- *    summary: Get lawyers from the given bar
+ *    summary: Get lawyers
  *    parameters:
- *    - in: path
- *      description: ID of the bar
- *      required: true
- *      schema:
- *        type: integer
  *    - in: query
  *      name: availability
  *      description: Filter lawyers by availability
  *      required: false
  *      schema:
  *        type: string
+ *    - in: query
+ *      name: barId
+ *      description: Filter lawyers by barId
+ *      required: false
+ *      schema:
+ *        type: number
  *    - in: query
  *      name: minRating
  *      description: Filter lawyers by minimum rating
@@ -91,7 +92,7 @@ router.post(
  */
 
 router.get(
-  "/lawyers/:barId",
+  "/",
   validateResource(userSchemas.getLawyersSchema),
   requireUser(),
   userController.getLawyers
@@ -99,7 +100,7 @@ router.get(
 
 /**
  * @openapi
- * '/api/user-profile/:userEmail':
+ * '/api/user/:userEmail/profile':
  *  get:
  *    tags:
  *    - User
@@ -126,11 +127,17 @@ router.get(
  *      500:
  *        description: Internal server error
  *
- * '/api/user-profile':
+ * '/api/user/profile':
  *  put:
  *    tags:
  *    - User
  *    summary: Profile successfully updated
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/UpdateUserProfileInput'
  *    responses:
  *      200:
  *        description: Success
@@ -148,13 +155,14 @@ router.get(
  *        description: Internal server error
  */
 router.get(
-  "/user-profile/:userEmail",
+  "/:userEmail/profile",
   validateResource(userSchemas.getUserProfileSchema),
+  requireRegistration({ userEmailField: "userEmail", place: "params" }),
   requireUser(),
   userController.getUserProfile
 );
 router.put(
-  "/user-profile",
+  "/profile",
   validateResource(userSchemas.updateProfileSchema),
   requireUser(),
   userController.updateProfile
@@ -162,11 +170,17 @@ router.put(
 
 /**
  * @openapi
- * '/api/user/city':
+ * '/api/user/:userEmail/city':
  *  get:
  *    tags:
  *    - User
  *    summary: Get the city of the user
+ *    parameters:
+ *    - in: path
+ *      description: Email of the user
+ *      required: true
+ *      schema:
+ *        type: string
  *    responses:
  *      200:
  *        description: Success
@@ -181,21 +195,27 @@ router.put(
  *      500:
  *        description: Internal server error
  */
-router.get("/user/city", requireUser(), userController.getCityOfTheUser);
+router.get(
+  "/:userEmail/city",
+  validateResource(userSchemas.getUserCitySchema),
+  requireUser(),
+  requireRegistration({ userEmailField: "userEmail", place: "params" }),
+  userController.getCityOfTheUser
+);
 
 /**
  * @openapi
- * '/api/user/:cityName':
+ * '/api/user':
  *  patch:
  *    tags:
  *    - User
  *    summary: Update the city of the user
- *    parameters:
- *    - in: path
- *      description: "New city name"
+ *    requestBody:
  *      required: true
- *      schema:
- *        type: string
+ *      content:
+ *        application/json:
+ *          schema:
+ *            $ref: '#/components/schemas/UpdateUserCityInput'
  *    responses:
  *      200:
  *        description: Success
@@ -213,7 +233,7 @@ router.get("/user/city", requireUser(), userController.getCityOfTheUser);
  *        description: Internal server error
  */
 router.patch(
-  "/user/:cityName",
+  "/",
   validateResource(userSchemas.updateCityOfTheUserSchema),
   requireUser(),
   userController.updateCityOfTheUser
@@ -221,7 +241,7 @@ router.patch(
 
 /**
  * @openapi
- * '/api/rate-lawyer':
+ * '/api/user/rate':
  *  post:
  *    tags:
  *    - User
@@ -251,7 +271,7 @@ router.patch(
  *        description: Internal server error
  */
 router.post(
-  "/rate-lawyer",
+  "/rate",
   validateResource(userSchemas.rateLawyerSchema),
   requireRegistration({ userEmailField: "rated_email", place: "body" }),
   requireUser(),

@@ -3,15 +3,6 @@ import { sequelize } from "../utils/db";
 import { LAWYER_STATE } from "../enums/lawyer.enum";
 import City from "./city.model";
 
-export class BasicLawyer {
-  email!: string;
-  firstname!: string;
-  lastname!: string;
-  bar_id!: number;
-  lawyer_state!: keyof typeof LAWYER_STATE;
-  average_rating!: number | null;
-}
-
 class Lawyer extends Model {
   email!: string;
   password_hash!: string;
@@ -51,7 +42,7 @@ Lawyer.init(
     lawyer_state: {
       type: DataTypes.ENUM(...Object.values(LAWYER_STATE)),
       allowNull: false,
-      defaultValue: "free",
+      defaultValue: LAWYER_STATE.FREE,
     },
     average_rating: {
       type: DataTypes.FLOAT,

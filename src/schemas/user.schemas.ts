@@ -34,6 +34,9 @@ const phoneRegex = new RegExp(
  *        passwordConfirmation:
  *          type: string
  *          example: 123456
+ *        barId:
+ *          type: number
+ *          example: 3
  *    CreateUserResponse:
  *      type: object
  *      properties:
@@ -179,12 +182,14 @@ const rateLawyerSchema = object({
 
 const getLawyersSchema = object({
   params: object({
-    barId: string().regex(intRegex),
+    userEmail: string().email("Not a valid email").optional(),
   }),
   query: object({
+    sort: z.enum(["ASC", "DESC"]).optional(),
     availability: z.enum(["True", "False"]).optional(),
     minRating: string().min(1).max(5).optional(),
     maxRating: string().min(1).max(5).optional(),
+    barId: string().regex(intRegex).optional(),
   }),
 });
 
@@ -211,11 +216,26 @@ const getLawyersSchema = object({
  *          type: string
  *          nullable: true
  *          example: https://www.linkedin.com/in/alptuna/
+ *    UpdateUserProfileInput:
+ *      type: object
+ *      properties:
+ *        age:
+ *          type: integer
+ *          nullable: true
+ *          example: 25
+ *        phone_number:
+ *          type: string
+ *          nullable: true
+ *          example: "+905323456789"
+ *        linkedin_url:
+ *          type: string
+ *          nullable: true
+ *          example: https://www.linkedin.com/in/alptuna/
  */
 
 const getUserProfileSchema = object({
   params: object({
-    userEmail: string(),
+    userEmail: string().email("Not a valid email"),
   }),
 });
 
@@ -239,11 +259,25 @@ const getUserProfileSchema = object({
  *        message:
  *          type: string
  *          example: "User's location is successfully updated"
+ *    UpdateUserCityInput:
+ *      type: object
+ *      required:
+ *        - cityId
+ *      properties:
+ *        cityId:
+ *          type: number
+ *          example: 2
  */
 
-const updateCityOfTheUserSchema = object({
+const getUserCitySchema = object({
   params: object({
-    cityName: string(),
+    userEmail: string().email("Not a valid email"),
+  }),
+});
+
+const updateCityOfTheUserSchema = object({
+  body: object({
+    cityId: number(),
   }),
 });
 
@@ -258,5 +292,6 @@ export default {
   rateLawyerSchema,
   getLawyersSchema,
   getUserProfileSchema,
+  getUserCitySchema,
   updateCityOfTheUserSchema,
 };

@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
-import { authService, tokenService, mailService } from "../services";
+import {
+  authService,
+  tokenService,
+  mailService,
+  userService,
+} from "../services";
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -7,8 +12,10 @@ export async function login(req: Request, res: Response) {
   const body = req.body;
 
   try {
+    const lawyer = await userService.getUser(body.email);
+
     const isMatch = await authService.comparePasswords({
-      email: body.email,
+      password_hash: lawyer.password_hash,
       password: body.password,
     });
 
@@ -16,13 +23,10 @@ export async function login(req: Request, res: Response) {
       return res.status(401).json({ message: "Invalid credentials." });
     }
 
-    const isVerified = await authService.isValidated(body.email);
-
-    if (!isVerified) {
-      res
+    if (!lawyer.is_validated) {
+      return res
         .status(403)
         .json({ message: "Account not validated. Please verify your email." });
-      return;
     }
 
     const { accessToken, refreshToken } = tokenService.generateLoginTokens({
@@ -66,7 +70,6 @@ export async function sendVerificationEmail(req: Request, res: Response) {
 
     return res.status(200).json({
       message: "Verification code has been sent successfully",
-      verificationCode: verificationCode,
     });
   } catch (e: any) {
     console.log(e);
@@ -179,9 +182,8 @@ export async function resetPassword(req: Request, res: Response) {
       return;
     }
 
-    // Update the user's password and clear the reset token fields in the database
+    // Update the user's password
     await authService.changePassword(email, newPassword);
-    await tokenService.deleteResetToken(email);
 
     res.status(200).json({ message: "Password reset successful." });
   } catch (error) {

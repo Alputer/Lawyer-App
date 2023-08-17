@@ -8,7 +8,7 @@ const router = express.Router();
 
 /**
  * @openapi
- * '/api/make-offer':
+ * '/api/offer':
  *  post:
  *     tags:
  *     - Offer
@@ -35,7 +35,7 @@ const router = express.Router();
  */
 
 router.post(
-  "/make-offer",
+  "/",
   validateResource(offerSchemas.makeOfferSchema),
   requireUser(),
   offerController.makeOffer
@@ -43,7 +43,7 @@ router.post(
 
 /**
  * @openapi
- * '/api/accept-offer':
+ * '/api/offer/accept':
  *  post:
  *     tags:
  *     - Offer
@@ -74,7 +74,7 @@ router.post(
  */
 
 router.post(
-  "/accept-offer",
+  "/accept",
   validateResource(offerSchemas.acceptOfferSchema),
   requireUser(),
   offerController.acceptOffer
@@ -82,7 +82,7 @@ router.post(
 
 /**
  * @openapi
- * '/api/reject-offer':
+ * '/api/offer/reject':
  *  post:
  *     tags:
  *     - Offer
@@ -113,7 +113,7 @@ router.post(
  */
 
 router.post(
-  "/reject-offer",
+  "/reject",
   validateResource(offerSchemas.rejectOfferSchema),
   requireUser(),
   offerController.rejectOffer

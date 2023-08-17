@@ -8,23 +8,10 @@ export const hashPassword = async (password: string): Promise<string> => {
 };
 
 export const comparePasswords = async (credentials: {
-  email: string;
+  password_hash: string;
   password: string;
 }): Promise<boolean> => {
-  const lawyer = await Lawyer.findOne({
-    attributes: ["password_hash"],
-    where: { email: credentials.email },
-  });
-
-  if (!lawyer) {
-    return false;
-  }
-
-  const isMatch = await bcrypt.compare(
-    credentials.password,
-    lawyer.password_hash
-  );
-  return isMatch;
+  return await bcrypt.compare(credentials.password, credentials.password_hash);
 };
 
 export const changePassword = async (

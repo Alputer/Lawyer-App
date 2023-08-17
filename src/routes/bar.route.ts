@@ -8,13 +8,14 @@ const router = express.Router();
 
 /**
  * @openapi
- * '/api/bars/:cityId':
+ * '/api/bar':
  *  get:
  *     tags:
  *     - Bar
  *     summary: Get bars in a given city
  *     parameters:
- *     - in: path
+ *     - in: query
+ *     name: cityId
  *     description: ID of the city
  *     required: true
  *     schema:
@@ -37,7 +38,7 @@ const router = express.Router();
  */
 
 router.get(
-  "/bars/:cityId",
+  "/",
   validateResource(barSchemas.getBarsInTheCitySchema),
   requireUser(),
   barController.getBarsInTheCity

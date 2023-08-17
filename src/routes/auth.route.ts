@@ -9,7 +9,7 @@ const router = express.Router();
 
 /**
  * @openapi
- * '/api/login':
+ * '/api/auth/login':
  *  post:
  *     tags:
  *     - Auth
@@ -48,7 +48,7 @@ router.post(
 
 /**
  * @openapi
- * '/api/send-verification-email':
+ * '/api/auth/send-verification-email':
  *  post:
  *     tags:
  *     - Auth
@@ -83,7 +83,7 @@ router.post(
 
 /**
  * @openapi
- * '/api/verify-email':
+ * '/api/auth/verify-email':
  *  post:
  *     tags:
  *     - Auth
@@ -120,7 +120,7 @@ router.post(
 
 /**
  * @openapi
- * '/api/refresh-token':
+ * '/api/auth/refresh-token':
  *  post:
  *     tags:
  *     - Auth
@@ -144,7 +144,7 @@ router.post("/refresh-token", authController.refreshToken);
 
 /**
  * @openapi
- * '/api/update-password':
+ * '/api/auth/update-password':
  *  post:
  *     tags:
  *     - Auth
@@ -173,14 +173,13 @@ router.post("/refresh-token", authController.refreshToken);
 router.post(
   "/update-password",
   validateResource(authSchemas.updatePasswordSchema),
-  requireRegistration({ userEmailField: "email", place: "body" }),
   requireUser(),
   authController.updatePassword
 );
 
 /**
  * @openapi
- * '/api/forgot-password':
+ * '/api/auth/forgot-password':
  *  post:
  *     tags:
  *     - Auth
@@ -215,7 +214,7 @@ router.post(
 
 /**
  * @openapi
- * '/api/reset-password':
+ * '/api/auth/reset-password':
  *  post:
  *     tags:
  *     - Auth

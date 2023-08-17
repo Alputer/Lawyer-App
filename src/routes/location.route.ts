@@ -6,7 +6,7 @@ const router = express.Router();
 
 /**
  * @openapi
- * '/api/cities':
+ * '/api/city':
  *  get:
  *     tags:
  *     - Location
@@ -31,6 +31,6 @@ const router = express.Router();
  *        description: Internal server error
  */
 
-router.get("/cities", requireUser(), locationController.getCities);
+router.get("/", requireUser(), locationController.getCities);
 
 export default router;

@@ -14,6 +14,16 @@ export async function userExists(userEmail: string) {
   return user != null;
 }
 
+export async function getUser(userEmail: string) {
+  const user = await Lawyer.findOne({
+    where: {
+      email: userEmail,
+    },
+    attributes: ["password_hash", "is_validated"],
+  });
+  return user;
+}
+
 export async function createUser(
   input: CreateUserInput,
   verificationCode: string
@@ -77,18 +87,30 @@ export async function rateLawyer(
   return;
 }
 
-export async function getLawyers(
-  barId: string,
-  sort: string | undefined
-): Promise<Lawyer[]> {
-  const options: any = {
+export async function getLawyer(userEmail: string) {
+  const user = await Lawyer.findOne({
     where: {
-      bar_id: barId,
+      email: userEmail,
     },
+  });
+
+  return user;
+}
+
+export async function getLawyers(sort: string | undefined): Promise<Lawyer[]> {
+  const options: any = {
+    attributes: [
+      "email",
+      "firstname",
+      "lastname",
+      "bar_id",
+      "lawyer_state",
+      "average_rating",
+    ],
   };
 
-  if (sort === "True") {
-    options.order = [["average_rating", "ASC"]];
+  if (sort) {
+    options.order = [["average_rating", sort]];
   }
 
   const lawyers = await Lawyer.findAll(options);
@@ -124,19 +146,9 @@ export async function getUserLocation(userEmail: string) {
   return lawyerWithCity.city?.city_name;
 }
 
-export async function updateUserLocation(userEmail: string, cityName: string) {
-  const city = await City.findOne({
-    where: {
-      city_name: cityName,
-    },
-  });
-
-  if (!city) {
-    throw new Error("City not found");
-  }
-
+export async function updateUserLocation(userEmail: string, cityId: string) {
   const [updatedRowsCount] = await Lawyer.update(
-    { last_location: city.city_id },
+    { last_location: cityId },
     {
       where: {
         email: userEmail,

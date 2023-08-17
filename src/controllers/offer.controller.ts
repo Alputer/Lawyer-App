@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { jobService, offerService } from "../services";
+import { OFFER_STATE } from "../enums/offer.enum";
 
 export async function makeOffer(req: Request, res: Response) {
   try {
@@ -27,30 +28,29 @@ export async function makeOffer(req: Request, res: Response) {
 export async function acceptOffer(req: Request, res: Response) {
   try {
     const { offerId } = req.body;
-    const executorCandidate = res.locals.user.email;
+    const receiver = res.locals.user.email;
 
-    const offerExists = await offerService.offerExists(offerId);
-    if (!offerExists) {
+    const offer = await offerService.getOffer(offerId);
+
+    if (!offer) {
       return res
         .status(404)
         .json({ error: `Offer with id '${offerId}' could not found` });
     }
 
-    const actualOfferReceiver = await offerService.getReceiver(offerId);
-    if (executorCandidate !== actualOfferReceiver) {
+    if (receiver !== offer.receiver) {
       return res
         .status(403)
         .json({ error: "You are not authorized to accept this offer" });
     }
 
-    const isDismissed = await offerService.isDismissed(offerId);
-    if (isDismissed) {
+    if (offer.offer_status === OFFER_STATE.Dismissed) {
       return res.status(409).json({
         error: `Offer with id '${offerId}' is already dismissed, possibly because another lawyer has already accepted the offer`,
       });
     }
 
-    await offerService.acceptOffer(offerId, executorCandidate);
+    await offerService.acceptOffer(offerId, receiver);
 
     return res.status(200).json({
       message: "Offer is successfully accepted",
@@ -66,22 +66,21 @@ export async function rejectOffer(req: Request, res: Response) {
     const { offerId } = req.body;
     const receiver = res.locals.user.email;
 
-    const offerExists = await offerService.offerExists(offerId);
-    if (!offerExists) {
+    const offer = await offerService.getOffer(offerId);
+
+    if (!offer) {
       return res
         .status(404)
         .json({ error: `Offer with id '${offerId}' could not found` });
     }
 
-    const actualOfferReceiver = await offerService.getReceiver(offerId);
-    if (receiver !== actualOfferReceiver) {
+    if (receiver !== offer.receiver) {
       return res
         .status(403)
         .json({ error: "You are not authorized to reject this offer" });
     }
 
-    const isDismissed = await offerService.isDismissed(offerId);
-    if (isDismissed) {
+    if (offer.offer_status === OFFER_STATE.Dismissed) {
       return res.status(409).json({
         error: `Offer with id '${offerId}' is already dismissed, possibly because another lawyer has already accepted the offer`,
       });

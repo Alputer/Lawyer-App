@@ -22,7 +22,7 @@ export async function setExecutor(
     },
     {
       where: {
-        id: jobId,
+        job_id: jobId,
       },
     }
   );

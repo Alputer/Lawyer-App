@@ -55,7 +55,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"alp.tuna1.453@gmail.com\",\n    \"password\": \"123456\"\n}\n",
+							"raw": "{\n    \"email\": \"alp.tuna.453@gmail.com\",\n    \"password\": \"123456\"\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -63,7 +63,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:1337/api/login",
+							"raw": "http://localhost:1337/api/auth/login",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -71,6 +71,7 @@
 							"port": "1337",
 							"path": [
 								"api",
+								"auth",
 								"login"
 							]
 						}
@@ -84,7 +85,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.collectionVariables.set(\"verificationCode\", pm.response.json().verificationCode);"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -106,7 +107,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:1337/api/send-verification-email",
+							"raw": "http://localhost:1337/api/auth/send-verification-email",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -114,6 +115,7 @@
 							"port": "1337",
 							"path": [
 								"api",
+								"auth",
 								"send-verification-email"
 							]
 						}
@@ -149,7 +151,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:1337/api/refresh-token",
+							"raw": "http://localhost:1337/api/auth/refresh-token",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -157,6 +159,7 @@
 							"port": "1337",
 							"path": [
 								"api",
+								"auth",
 								"refresh-token"
 							]
 						}
@@ -173,7 +176,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"alp.tuna.453@gmail.com\",\n    \"verificationCode\": \"936e18a3-cbf9-417d-991f-851113e1e93e\"\n}",
+							"raw": "{\n    \"email\": \"alp.tuna.453@gmail.com\",\n    \"verificationCode\": \"7d10eadc-43a3-4cc5-88fa-b0bbbabe8837\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -181,7 +184,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:1337/api/verify-email",
+							"raw": "http://localhost:1337/api/auth/verify-email",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -189,6 +192,7 @@
 							"port": "1337",
 							"path": [
 								"api",
+								"auth",
 								"verify-email"
 							]
 						}
@@ -224,7 +228,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:1337/api/forgot-password",
+							"raw": "http://localhost:1337/api/auth/forgot-password",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -232,6 +236,7 @@
 							"port": "1337",
 							"path": [
 								"api",
+								"auth",
 								"forgot-password"
 							]
 						}
@@ -267,7 +272,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:1337/api/reset-password",
+							"raw": "http://localhost:1337/api/auth/reset-password",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -275,6 +280,7 @@
 							"port": "1337",
 							"path": [
 								"api",
+								"auth",
 								"reset-password"
 							]
 						}
@@ -288,7 +294,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"email\": \"alp.tuna.453@gmail.com\",\n    \"newPassword\": \"123456\"\n}",
+							"raw": "{\n    \"newPassword\": \"123456\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -296,7 +302,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:1337/api/update-password",
+							"raw": "http://localhost:1337/api/auth/update-password",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -304,6 +310,7 @@
 							"port": "1337",
 							"path": [
 								"api",
+								"auth",
 								"update-password"
 							]
 						}
@@ -322,7 +329,7 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"pm.collectionVariables.set(\"verificationCode\", pm.response.json().verificationCode);"
+									""
 								],
 								"type": "text/javascript"
 							}
@@ -336,7 +343,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"firstname\": \"alp\",\n    \"lastname\": \"tuna\",\n    \"email\": \"alp.tuna2.453@gmail.com\",\n    \"password\": \"123456\",\n    \"passwordConfirmation\": \"123456\",\n    \"barId\": 5\n}",
+							"raw": "{\n    \"firstname\": \"test3name\",\n    \"lastname\": \"test3name\",\n    \"email\": \"test3@gmail.com\",\n    \"password\": \"123456\",\n    \"passwordConfirmation\": \"123456\",\n    \"barId\": 5\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -364,7 +371,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:1337/api/user-profile/:email",
+							"raw": "http://localhost:1337/api/user/:userEmail/profile",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -372,13 +379,14 @@
 							"port": "1337",
 							"path": [
 								"api",
-								"user-profile",
-								":email"
+								"user",
+								":userEmail",
+								"profile"
 							],
 							"variable": [
 								{
-									"key": "email",
-									"value": "alp.tuna1.453@gmail.com"
+									"key": "userEmail",
+									"value": "alp.tuna.453@gmail.co"
 								}
 							]
 						}
@@ -400,7 +408,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:1337/api/user-profile",
+							"raw": "http://localhost:1337/api/user/profile",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -408,7 +416,8 @@
 							"port": "1337",
 							"path": [
 								"api",
-								"user-profile"
+								"user",
+								"profile"
 							],
 							"query": [
 								{
@@ -428,11 +437,18 @@
 				},
 				{
 					"name": "User's City",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \n}"
+						},
 						"url": {
-							"raw": "http://localhost:1337/api/user/city",
+							"raw": "http://localhost:1337/api/user/:userEmail/city",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -441,7 +457,14 @@
 							"path": [
 								"api",
 								"user",
+								":userEmail",
 								"city"
+							],
+							"variable": [
+								{
+									"key": "userEmail",
+									"value": "alp.tuna.453@gmail.com"
+								}
 							]
 						}
 					},
@@ -452,8 +475,17 @@
 					"request": {
 						"method": "PATCH",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cityId\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "http://localhost:1337/api/user/:cityName",
+							"raw": "http://localhost:1337/api/user",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -461,14 +493,7 @@
 							"port": "1337",
 							"path": [
 								"api",
-								"user",
-								":cityName"
-							],
-							"variable": [
-								{
-									"key": "cityName",
-									"value": "Istanbul"
-								}
+								"user"
 							]
 						}
 					},
@@ -481,7 +506,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"rated_email\": \"test1@gmail.com\",\n    \"rating\": 4\n}",
+							"raw": "{\n    \"rated_email\": \"test1@gmail.com\",\n    \"rating\": 3\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -489,7 +514,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:1337/api/rate-lawyer",
+							"raw": "http://localhost:1337/api/user/rate",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -497,7 +522,8 @@
 							"port": "1337",
 							"path": [
 								"api",
-								"rate-lawyer"
+								"user",
+								"rate"
 							]
 						}
 					},
@@ -509,7 +535,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:1337/api/lawyers/:barId?sort=True",
+							"raw": "http://localhost:1337/api/user",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -517,19 +543,36 @@
 							"port": "1337",
 							"path": [
 								"api",
-								"lawyers",
-								":barId"
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Sort Lawyers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1337/api/user?&sort=ASC",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1337",
+							"path": [
+								"api",
+								"user"
 							],
 							"query": [
 								{
-									"key": "sort",
-									"value": "True"
-								}
-							],
-							"variable": [
+									"key": null,
+									"value": null
+								},
 								{
-									"key": "barId",
-									"value": "5"
+									"key": "sort",
+									"value": "ASC"
 								}
 							]
 						}
@@ -542,7 +585,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:1337/api/lawyers/:barId?availability=True",
+							"raw": "http://localhost:1337/api/user?availability=False",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -550,19 +593,12 @@
 							"port": "1337",
 							"path": [
 								"api",
-								"lawyers",
-								":barId"
+								"user"
 							],
 							"query": [
 								{
 									"key": "availability",
-									"value": "True"
-								}
-							],
-							"variable": [
-								{
-									"key": "barId",
-									"value": "5"
+									"value": "False"
 								}
 							]
 						}
@@ -575,7 +611,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:1337/api/lawyers/:barId?availability=True&minRating=3&sort=True",
+							"raw": "http://localhost:1337/api/user?availability=True&minRating=3&sort=ASC&barId=5",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -583,8 +619,7 @@
 							"port": "1337",
 							"path": [
 								"api",
-								"lawyers",
-								":barId"
+								"user"
 							],
 							"query": [
 								{
@@ -597,46 +632,11 @@
 								},
 								{
 									"key": "sort",
-									"value": "True"
-								}
-							],
-							"variable": [
+									"value": "ASC"
+								},
 								{
 									"key": "barId",
 									"value": "5"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Sort Lawyers",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:1337/api/lawyers/:barId?sort=True",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"lawyers",
-								":barId"
-							],
-							"query": [
-								{
-									"key": "sort",
-									"value": "True"
-								}
-							],
-							"variable": [
-								{
-									"key": "barId",
-									"value": "1"
 								}
 							]
 						}
@@ -654,7 +654,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:1337/api/cities",
+							"raw": "http://localhost:1337/api/city",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -662,7 +662,7 @@
 							"port": "1337",
 							"path": [
 								"api",
-								"cities"
+								"city"
 							]
 						}
 					},
@@ -679,7 +679,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:1337/api/bars/:cityId",
+							"raw": "http://localhost:1337/api/bar?cityId=1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -687,17 +687,9 @@
 							"port": "1337",
 							"path": [
 								"api",
-								"bars",
-								":cityId"
+								"bar"
 							],
 							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
-							],
-							"variable": [
 								{
 									"key": "cityId",
 									"value": "1"
@@ -753,7 +745,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"jobId\": \"bba61cd0-3a04-11ee-8c12-e5e1c555f13b\"\n}",
+							"raw": "{\n    \"jobId\": \"610f84e0-3d02-11ee-a520-cbc5b06db6c2\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -761,7 +753,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:1337/api/make-offer",
+							"raw": "http://localhost:1337/api/offer",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -769,7 +761,7 @@
 							"port": "1337",
 							"path": [
 								"api",
-								"make-offer"
+								"offer"
 							]
 						}
 					},
@@ -782,7 +774,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"offerId\": \"f3316720-3a06-11ee-9c2a-57fdba25b078\"\n}",
+							"raw": "{\n    \"offerId\": \"0a231100-3d12-11ee-81e2-e50fbda9e8f0\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -790,7 +782,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:1337/api/accept-offer",
+							"raw": "http://localhost:1337/api/offer/accept",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -798,7 +790,8 @@
 							"port": "1337",
 							"path": [
 								"api",
-								"accept-offer"
+								"offer",
+								"accept"
 							]
 						}
 					},
@@ -811,7 +804,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"offerId\": \"f3316720-3a06-11ee-9c2a-57fdba25b078\"\n}",
+							"raw": "{\n    \"offerId\": \"0a231100-3d12-11ee-81e2-e50fbda9e8f0\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -819,7 +812,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:1337/api/reject-offer",
+							"raw": "http://localhost:1337/api/offer/reject",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -827,7 +820,8 @@
 							"port": "1337",
 							"path": [
 								"api",
-								"reject-offer"
+								"offer",
+								"reject"
 							]
 						}
 					},
@@ -873,6 +867,10 @@
 		},
 		{
 			"key": "verificationCode",
+			"value": ""
+		},
+		{
+			"key": "resetToken",
 			"value": ""
 		}
 	]

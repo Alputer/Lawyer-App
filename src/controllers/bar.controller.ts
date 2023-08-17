@@ -3,7 +3,7 @@ import { locationService, barService } from "../services";
 
 export async function getBarsInTheCity(req: Request, res: Response) {
   try {
-    const { cityId } = req.params;
+    const { cityId } = req.query;
 
     const cityExists = await locationService.cityWithIdExists(cityId);
     if (!cityExists) {
