@@ -149,47 +149,59 @@ const rateLawyerSchema = object({
  * components:
  *  schemas:
  *    GetLawyersResponse:
- *      type: array
- *      items:
- *        type: object
- *        required:
- *          -email
- *          -firstname
- *          -lastname
- *          -bar_id
- *          -lawyer_state
- *          -average_rating
- *        properties:
- *          email:
- *            type: string
- *            example: "john.doe@gmail.com"
- *          firstname:
- *            type: string
- *            example: "john"
- *          lastname:
- *            type: string
- *            example: "doe"
- *          bar_id:
- *            type: integer
- *            example: 5
- *          lawyer_state:
- *            type: string
- *            example: "busy"
- *          average_rating:
- *            type: double
- *            example: 3.8
+ *      type: object
+ *      required:
+ *        - lawyers
+ *        - currentPage
+ *        - totalPages
+ *      properties:
+ *        lawyers:
+ *          type: array
+ *          items:
+ *            type: object
+ *            required:
+ *              -email
+ *              -firstname
+ *              -lastname
+ *              -bar_id
+ *              -lawyer_state
+ *              -average_rating
+ *            properties:
+ *              email:
+ *                type: string
+ *                example: "john.doe@gmail.com"
+ *              firstname:
+ *                type: string
+ *                example: "john"
+ *              lastname:
+ *                type: string
+ *                example: "doe"
+ *              bar_id:
+ *                type: integer
+ *                example: 5
+ *              lawyer_state:
+ *                type: string
+ *                example: "busy"
+ *              average_rating:
+ *                type: double
+ *                example: 3.8
+ *        currentPage:
+ *          type: number
+ *          example: 2
+ *        totalPages:
+ *          type: number
+ *          example: 5
  */
 
 const getLawyersSchema = object({
-  params: object({
-    userEmail: string().email("Not a valid email").optional(),
-  }),
   query: object({
     sort: z.enum(["ASC", "DESC"]).optional(),
     availability: z.enum(["True", "False"]).optional(),
     minRating: string().min(1).max(5).optional(),
     maxRating: string().min(1).max(5).optional(),
     barId: string().regex(intRegex).optional(),
+    page: string().regex(intRegex).optional(),
+    pageSize: string().regex(intRegex).optional(),
   }),
 });
 

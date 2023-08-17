@@ -74,6 +74,18 @@ router.post(
  *      required: false
  *      schema:
  *        type: number
+ *    - in: query
+ *      name: page
+ *      description: Which page to return
+ *      required: false
+ *      schema:
+ *        type: number
+ *    - in: query
+ *      name: pageSize
+ *      description: Size of the page
+ *      required: false
+ *      schema:
+ *        type: number
  *    responses:
  *      200:
  *        description: Success

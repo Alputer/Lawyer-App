@@ -48,27 +48,41 @@ export async function register(req: Request, res: Response) {
 
 export async function getLawyers(req: Request, res: Response) {
   try {
-    const { availability, barId, minRating, maxRating, sort } = req.query;
+    const { availability, barId, minRating, maxRating, sort, page, pageSize } =
+      req.query;
 
     if (barId) {
       const barExists = await barService.barExists(barId);
       if (!barExists) {
         return res
           .status(404)
-          .json({ error: `Bar with id '${barId}' could not found` });
+          .json({ error: `Bar with id '${barId}' could not be found` });
       }
     }
 
-    const all_lawyers = await userService.getLawyers(sort);
-    const filtered_lawyers = await filterService.filterLawyers(
-      all_lawyers,
+    const pageNumber = parseInt(page as string) || 1;
+    const itemsPerPage = parseInt(pageSize as string) || 10;
+
+    const allLawyers = await userService.getLawyers(sort);
+
+    const filteredLawyers = await filterService.filterLawyers(
+      allLawyers,
       parseInt(barId as string),
       availability,
       parseFloat(minRating as string),
       parseFloat(maxRating as string)
     );
 
-    return res.status(200).json({ lawyers: filtered_lawyers });
+    const startIndex = (pageNumber - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+
+    const paginatedLawyers = filteredLawyers.slice(startIndex, endIndex);
+
+    return res.status(200).json({
+      lawyers: paginatedLawyers,
+      currentPage: pageNumber,
+      totalPages: Math.ceil(filteredLawyers.length / itemsPerPage),
+    });
   } catch (e: any) {
     console.error("Error getting lawyers", e);
     res.status(500).json({ error: "An internal server error occurred." });
