@@ -1,4 +1,5 @@
 import { z, object, string, number, TypeOf } from "zod";
+import { SORT_OPTIONS } from "../enums/sort.enum";
 
 const intRegex = new RegExp(/^\d+$/);
 
@@ -151,10 +152,14 @@ const rateLawyerSchema = object({
  *    GetLawyersResponse:
  *      type: object
  *      required:
+ *        - totalItems
  *        - lawyers
  *        - currentPage
  *        - totalPages
  *      properties:
+ *        totalItems:
+ *          type: number
+ *          example: 23
  *        lawyers:
  *          type: array
  *          items:
@@ -169,33 +174,52 @@ const rateLawyerSchema = object({
  *            properties:
  *              email:
  *                type: string
- *                example: "john.doe@gmail.com"
  *              firstname:
  *                type: string
- *                example: "john"
  *              lastname:
  *                type: string
- *                example: "doe"
  *              bar_id:
  *                type: integer
- *                example: 5
  *              lawyer_state:
  *                type: string
- *                example: "busy"
  *              average_rating:
- *                type: double
- *                example: 3.8
+ *                type: number
+ *          example:
+ *            - email: john.doe@gmail.com
+ *              firstname: john
+ *              lastname: doe
+ *              bar_id: 5
+ *              lawyer_state: FREE
+ *              average_rating: 4.2
+ *            - email: jane.doe@gmail.com
+ *              firstname: jane
+ *              lastname: doe
+ *              bar_id: 3
+ *              lawyer_state: FREE
+ *              average_rating: 3.5
+ *            - email: lionel.messi@outlook.com
+ *              firstname: lionel
+ *              lastname: messi
+ *              bar_id: 5
+ *              lawyer_state: BUSY
+ *              average_rating: 5
+ *            - email: sabri.sarioglu@gmail.com
+ *              firstname: sabri
+ *              lastname: sarioglu
+ *              bar_id: 2
+ *              lawyer_state: FREE
+ *              average_rating: null
  *        currentPage:
  *          type: number
  *          example: 2
  *        totalPages:
  *          type: number
- *          example: 5
+ *          example: 6
  */
 
 const getLawyersSchema = object({
   query: object({
-    sort: z.enum(["ASC", "DESC"]).optional(),
+    sort: z.enum([SORT_OPTIONS.DESC, SORT_OPTIONS.ASC]).optional(),
     availability: z.enum(["True", "False"]).optional(),
     minRating: string().min(1).max(5).optional(),
     maxRating: string().min(1).max(5).optional(),

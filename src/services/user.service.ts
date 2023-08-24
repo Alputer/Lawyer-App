@@ -1,9 +1,14 @@
 import { CreateUserInput } from "../schemas/user.schemas";
 import { hashPassword } from "./auth.service";
 import City from "../models/city.model";
-import Lawyer, { LawyerWithCity } from "../models/lawyer.model";
+import Lawyer, {
+  GetLawyersOptions,
+  LawyerWithCity,
+} from "../models/lawyer.model";
 import LawyerProfile from "../models/lawyer_profile.model";
 import Rating from "../models/rating.model";
+import { SORT_OPTIONS } from "../enums/sort.enum";
+import { Op } from "sequelize";
 
 export async function userExists(userEmail: string) {
   const user = await Lawyer.findOne({
@@ -97,8 +102,10 @@ export async function getLawyer(userEmail: string) {
   return user;
 }
 
-export async function getLawyers(sort: string | undefined): Promise<Lawyer[]> {
-  const options: any = {
+export async function getLawyers(
+  options: GetLawyersOptions
+): Promise<{ lawyers: Lawyer[]; totalCount: number }> {
+  const queryOptions: any = {
     attributes: [
       "email",
       "firstname",
@@ -107,15 +114,44 @@ export async function getLawyers(sort: string | undefined): Promise<Lawyer[]> {
       "lawyer_state",
       "average_rating",
     ],
+    order: [
+      ["average_rating", options.sort === SORT_OPTIONS.DESC ? "DESC" : "ASC"],
+    ],
+    limit: options.pageSize,
+    offset: (options.page - 1) * options.pageSize,
   };
 
-  if (sort) {
-    options.order = [["average_rating", sort]];
+  if (options.barId) {
+    queryOptions.where = {
+      ...queryOptions.where,
+      bar_id: options.barId,
+    };
   }
 
-  const lawyers = await Lawyer.findAll(options);
+  if (options.minRating || options.maxRating) {
+    queryOptions.where = {
+      ...queryOptions.where,
+      average_rating: {
+        [Op.between]: [options.minRating || 0, options.maxRating || 5],
+      },
+    };
+  }
 
-  return lawyers;
+  if (options.lawyer_state) {
+    queryOptions.where = {
+      ...queryOptions.where,
+      lawyer_state: options.lawyer_state,
+    };
+  }
+
+  const { rows: lawyers, count: totalCount } = await Lawyer.findAndCountAll(
+    queryOptions
+  );
+
+  return {
+    lawyers,
+    totalCount,
+  };
 }
 
 export async function getUserProfile(userEmail: string) {

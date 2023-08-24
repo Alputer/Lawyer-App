@@ -4,8 +4,10 @@ import {
   barService,
   mailService,
   locationService,
-  filterService,
 } from "../services";
+import { GetLawyersOptions } from "../models/lawyer.model";
+import { SORT_OPTIONS } from "../enums/sort.enum";
+import { LAWYER_STATE } from "../enums/lawyer.enum";
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -60,28 +62,30 @@ export async function getLawyers(req: Request, res: Response) {
       }
     }
 
-    const pageNumber = parseInt(page as string) || 1;
-    const itemsPerPage = parseInt(pageSize as string) || 10;
+    const options: GetLawyersOptions = {
+      barId: parseInt(barId as string),
+      lawyer_state:
+        availability === undefined
+          ? undefined
+          : availability === "True"
+          ? LAWYER_STATE.FREE
+          : LAWYER_STATE.BUSY,
+      minRating: parseFloat(minRating as string),
+      maxRating: parseFloat(maxRating as string),
+      sort: sort === SORT_OPTIONS.DESC ? SORT_OPTIONS.DESC : SORT_OPTIONS.ASC,
+      page: parseInt(page as string) || 1,
+      pageSize: parseInt(pageSize as string) || 10,
+    };
 
-    const allLawyers = await userService.getLawyers(sort);
+    console.log("options: ", options);
 
-    const filteredLawyers = await filterService.filterLawyers(
-      allLawyers,
-      parseInt(barId as string),
-      availability,
-      parseFloat(minRating as string),
-      parseFloat(maxRating as string)
-    );
-
-    const startIndex = (pageNumber - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-
-    const paginatedLawyers = filteredLawyers.slice(startIndex, endIndex);
+    const { lawyers, totalCount } = await userService.getLawyers(options);
 
     return res.status(200).json({
-      lawyers: paginatedLawyers,
-      currentPage: pageNumber,
-      totalPages: Math.ceil(filteredLawyers.length / itemsPerPage),
+      totalItems: totalCount,
+      lawyers: lawyers,
+      currentPage: options.page,
+      totalPages: Math.ceil(totalCount / options.pageSize),
     });
   } catch (e: any) {
     console.error("Error getting lawyers", e);

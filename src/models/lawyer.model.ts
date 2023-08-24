@@ -2,6 +2,7 @@ import { Model, DataTypes } from "sequelize";
 import { sequelize } from "../utils/db";
 import { LAWYER_STATE } from "../enums/lawyer.enum";
 import City from "./city.model";
+import { SORT_OPTIONS } from "../enums/sort.enum";
 
 class Lawyer extends Model {
   email!: string;
@@ -83,6 +84,16 @@ Lawyer.belongsTo(City, { foreignKey: "last_location", as: "city" });
 
 export class LawyerWithCity extends Lawyer {
   city!: City;
+}
+
+export interface GetLawyersOptions {
+  barId: number;
+  lawyer_state: LAWYER_STATE | undefined;
+  minRating: number;
+  maxRating: number;
+  sort: SORT_OPTIONS;
+  page: number;
+  pageSize: number;
 }
 
 export default Lawyer;

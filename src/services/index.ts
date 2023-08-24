@@ -6,4 +6,3 @@ export const tokenService = require("./token.service");
 export const mailService = require("./mail.service");
 export const jobService = require("./job.service");
 export const offerService = require("./offer.service");
-export const filterService = require("./filter.service");
