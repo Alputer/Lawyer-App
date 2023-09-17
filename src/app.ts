@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import config from "config";
 import logger from "./utils/logger";
-import { connect } from "./utils/db";
+import connect from "./utils/db";
 import router from "./routes";
 import deserializeUser from "./middlewares/deserializeUser";
 import cookieParser from "cookie-parser";

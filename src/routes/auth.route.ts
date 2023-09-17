@@ -42,7 +42,11 @@ const router = express.Router();
 router.post(
   "/login",
   validateResource(authSchemas.loginSchema),
-  requireRegistration({ userEmailField: "email", place: "body" }),
+  requireRegistration({
+    userIdentifierField: "email",
+    place: "body",
+    type: "email",
+  }),
   authController.login
 );
 
@@ -77,7 +81,11 @@ router.post(
 router.post(
   "/send-verification-email",
   validateResource(authSchemas.sendVerificationEmailSchema),
-  requireRegistration({ userEmailField: "email", place: "body" }),
+  requireRegistration({
+    userIdentifierField: "email",
+    place: "body",
+    type: "email",
+  }),
   authController.sendVerificationEmail
 );
 
@@ -114,7 +122,11 @@ router.post(
 router.post(
   "/verify-email",
   validateResource(authSchemas.verifyEmailSchema),
-  requireRegistration({ userEmailField: "email", place: "body" }),
+  requireRegistration({
+    userIdentifierField: "email",
+    place: "body",
+    type: "email",
+  }),
   authController.verifyEmail
 );
 
@@ -208,7 +220,11 @@ router.post(
 router.post(
   "/forgot-password",
   validateResource(authSchemas.forgotPasswordSchema),
-  requireRegistration({ userEmailField: "email", place: "body" }),
+  requireRegistration({
+    userIdentifierField: "email",
+    place: "body",
+    type: "email",
+  }),
   authController.forgotPassword
 );
 
@@ -245,7 +261,11 @@ router.post(
 router.post(
   "/reset-password",
   validateResource(authSchemas.resetPasswordSchema),
-  requireRegistration({ userEmailField: "email", place: "body" }),
+  requireRegistration({
+    userIdentifierField: "email",
+    place: "body",
+    type: "email",
+  }),
   authController.resetPassword
 );
 

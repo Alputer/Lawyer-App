@@ -1,31 +1,24 @@
 import { CreateUserInput } from "../schemas/user.schemas";
 import { hashPassword } from "./auth.service";
-import City from "../models/city.model";
-import Lawyer, {
-  GetLawyersOptions,
-  LawyerWithCity,
-} from "../models/lawyer.model";
-import LawyerProfile from "../models/lawyer_profile.model";
-import Rating from "../models/rating.model";
-import { SORT_OPTIONS } from "../enums/sort.enum";
-import { Op } from "sequelize";
+import { GetLawyersOptions, Lawyer, RatingInfo } from "../models/lawyer.model";
+import { Rating } from "../models/rating.model";
+import { SORT_OPTIONS } from "../utils/enums";
+import { omit } from "lodash";
 
 export async function userExists(userEmail: string) {
   const user = await Lawyer.findOne({
-    where: {
-      email: userEmail,
-    },
+    email: userEmail,
   });
   return user != null;
 }
 
 export async function getUser(userEmail: string) {
-  const user = await Lawyer.findOne({
-    where: {
+  const user = await Lawyer.findOne(
+    {
       email: userEmail,
     },
-    attributes: ["password_hash", "is_validated"],
-  });
+    "password_hash is_validated"
+  );
   return user;
 }
 
@@ -42,10 +35,6 @@ export async function createUser(
     lastname: input.lastname,
     verification_code: verificationCode,
     bar_id: input.barId,
-  });
-
-  await LawyerProfile.create({
-    email: input.email,
   });
 
   return;
@@ -69,84 +58,94 @@ export async function updateProfile(
     updates.linkedin_url = linkedinUrl;
   }
 
-  await LawyerProfile.update(updates, {
-    where: {
+  await Lawyer.updateOne(
+    {
       email: email,
     },
-  });
+    { lawyer_profile: updates }
+  );
 
   return;
 }
 
 export async function rateLawyer(
-  rater_email: string,
-  rated_email: string,
+  rater_id: string,
+  rated_id: string,
   rating: number
 ) {
   await Rating.create({
-    rater_email: rater_email,
-    rated_email: rated_email,
+    rater_id: rater_id,
+    rated_id: rated_id,
     rating: rating,
   });
+
+  let ratingInfo: RatingInfo = (await Lawyer.findOne(
+    { _id: rated_id },
+    "rating_info"
+  )) as RatingInfo;
+
+  if (!ratingInfo?.average_rating) {
+    ratingInfo = { average_rating: 0, total_number_of_votes: 0 };
+  }
+
+  ratingInfo.average_rating =
+    (ratingInfo.average_rating * ratingInfo.total_number_of_votes + rating) /
+    (ratingInfo.total_number_of_votes + 1);
+  ratingInfo.total_number_of_votes += 1;
+
+  await Lawyer.updateOne({ _id: rated_id }, { rating_info: ratingInfo });
 
   return;
 }
 
 export async function getLawyer(userEmail: string) {
   const user = await Lawyer.findOne({
-    where: {
-      email: userEmail,
-    },
+    email: userEmail,
   });
 
   return user;
 }
 
-export async function getLawyers(
-  options: GetLawyersOptions
-): Promise<{ lawyers: Lawyer[]; totalCount: number }> {
-  const queryOptions: any = {
-    attributes: [
+export async function getLawyers(options: GetLawyersOptions) {
+  const query: any = {};
+  if (options.barId) {
+    query.bar_id = options.barId;
+  }
+
+  if (options.minRating || options.maxRating) {
+    query["rating_info.average_rating"] = {
+      $gte: options.minRating || 0,
+      $lte: options.maxRating || 5,
+    };
+  }
+
+  if (options.lawyer_state) {
+    query.lawyer_state = options.lawyer_state;
+  }
+
+  const pageSize = options.pageSize || 10;
+  const page = options.page || 1;
+  const skip = (page - 1) * pageSize;
+
+  const lawyersQuery = Lawyer.find(query)
+    .select([
       "email",
       "firstname",
       "lastname",
       "bar_id",
       "lawyer_state",
-      "average_rating",
-    ],
-    order: [
-      ["average_rating", options.sort === SORT_OPTIONS.DESC ? "DESC" : "ASC"],
-    ],
-    limit: options.pageSize,
-    offset: (options.page - 1) * options.pageSize,
-  };
+      "rating_info",
+    ])
+    .sort({
+      "rating_info.average_rating": options.sort === SORT_OPTIONS.DESC ? -1 : 1,
+    })
+    .limit(pageSize)
+    .skip(skip);
 
-  if (options.barId) {
-    queryOptions.where = {
-      ...queryOptions.where,
-      bar_id: options.barId,
-    };
-  }
-
-  if (options.minRating || options.maxRating) {
-    queryOptions.where = {
-      ...queryOptions.where,
-      average_rating: {
-        [Op.between]: [options.minRating || 0, options.maxRating || 5],
-      },
-    };
-  }
-
-  if (options.lawyer_state) {
-    queryOptions.where = {
-      ...queryOptions.where,
-      lawyer_state: options.lawyer_state,
-    };
-  }
-
-  const { rows: lawyers, count: totalCount } = await Lawyer.findAndCountAll(
-    queryOptions
-  );
+  const [lawyers, totalCount] = await Promise.all([
+    lawyersQuery.exec(),
+    Lawyer.countDocuments(query).exec(),
+  ]);
 
   return {
     lawyers,
@@ -155,44 +154,40 @@ export async function getLawyers(
 }
 
 export async function getUserProfile(userEmail: string) {
-  const userProfile = await LawyerProfile.findOne({
-    where: {
-      email: userEmail,
-    },
-  });
+  const userProfile = await Lawyer.findOne({
+    email: userEmail,
+  })
+    .select("lawyer_profile")
+    .exec();
 
   if (!userProfile) {
     throw new Error("User profile not found");
   }
 
-  return {
-    age: userProfile.age,
-    phone_number: userProfile.phone_number,
-    linkedin_url: userProfile.linkedin_url,
-  };
+  return omit(userProfile.toJSON(), "_id");
 }
 
 export async function getUserLocation(userEmail: string) {
-  const lawyerWithCity = (await Lawyer.findOne({
-    where: { email: userEmail },
-    include: [{ model: City, as: "city" }],
-  })) as LawyerWithCity;
+  const userLocation = await Lawyer.findOne({ email: userEmail })
+    .select("last_location")
+    .exec();
 
-  console.log("Lawyer: ", JSON.stringify(lawyerWithCity));
-  return lawyerWithCity.city?.city_name;
+  return userLocation
+    ? userLocation?.last_location
+      ? omit(userLocation.toJSON(), "_id")
+      : null
+    : null;
 }
 
 export async function updateUserLocation(userEmail: string, cityId: string) {
-  const [updatedRowsCount] = await Lawyer.update(
-    { last_location: cityId },
+  const queryResult = await Lawyer.updateOne(
     {
-      where: {
-        email: userEmail,
-      },
-    }
+      email: userEmail,
+    },
+    { last_location: cityId }
   );
 
-  if (updatedRowsCount === 0) {
+  if (queryResult.modifiedCount === 0) {
     throw new Error("User not found");
   }
 

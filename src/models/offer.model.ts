@@ -1,78 +1,36 @@
-import { DataTypes, Model } from "sequelize";
-import { sequelize } from "../utils/db";
-import { OFFER_STATE } from "../enums/offer.enum";
+import mongoose from "mongoose";
+import { OFFER_STATE } from "../utils/enums";
 
-class Offer extends Model {
-  offer_id!: string;
-  job_id!: string;
-  requester!: string;
-  receiver!: string;
-  offer_status!: OFFER_STATE;
-  offer_date!: Date;
-  response_date!: Date | null;
-  dismiss_date!: Date | null;
-}
-
-Offer.init(
-  {
-    offer_id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV1,
-      primaryKey: true,
-    },
-    job_id: {
-      type: DataTypes.UUID,
-      allowNull: false,
-      references: {
-        model: "Jobs",
-        key: "job_id",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "CASCADE",
-    },
-    requester: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      references: {
-        model: "Lawyers",
-        key: "email",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "CASCADE",
-    },
-    receiver: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      references: {
-        model: "Lawyers",
-        key: "email",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "CASCADE",
-    },
-    offer_status: {
-      type: DataTypes.ENUM(...Object.values(OFFER_STATE)),
-      allowNull: false,
-      defaultValue: OFFER_STATE.Pending,
-    },
-    offer_date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    response_date: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    dismiss_date: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
+const offerSchema = new mongoose.Schema({
+  job_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: "Job",
   },
-  {
-    sequelize,
-    timestamps: true,
-    modelName: "Offer",
-  }
-);
+  requester: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Lawyer",
+    required: true,
+  },
+  receiver: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Lawyer",
+    required: true,
+  },
+  offer_status: {
+    type: String,
+    enum: Object.values(OFFER_STATE),
+    default: OFFER_STATE.Pending,
+    required: true,
+  },
+  offer_date: {
+    type: Date,
+    required: true,
+    immutable: true,
+    default: () => Date.now(),
+  },
+  response_date: Date,
+  dismiss_date: Date,
+});
 
-export default Offer;
+export const Offer = mongoose.model("Offer", offerSchema);

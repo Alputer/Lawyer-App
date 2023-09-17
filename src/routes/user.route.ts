@@ -169,7 +169,11 @@ router.get(
 router.get(
   "/:userEmail/profile",
   validateResource(userSchemas.getUserProfileSchema),
-  requireRegistration({ userEmailField: "userEmail", place: "params" }),
+  requireRegistration({
+    userIdentifierField: "userEmail",
+    place: "params",
+    type: "email",
+  }),
   requireUser(),
   userController.getUserProfile
 );
@@ -211,7 +215,11 @@ router.get(
   "/:userEmail/city",
   validateResource(userSchemas.getUserCitySchema),
   requireUser(),
-  requireRegistration({ userEmailField: "userEmail", place: "params" }),
+  requireRegistration({
+    userIdentifierField: "userEmail",
+    place: "params",
+    type: "email",
+  }),
   userController.getCityOfTheUser
 );
 
@@ -285,7 +293,11 @@ router.patch(
 router.post(
   "/rate",
   validateResource(userSchemas.rateLawyerSchema),
-  requireRegistration({ userEmailField: "rated_email", place: "body" }),
+  requireRegistration({
+    userIdentifierField: "rated_id",
+    place: "body",
+    type: "id",
+  }),
   requireUser(),
   userController.rateLawyer
 );

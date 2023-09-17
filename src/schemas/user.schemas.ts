@@ -1,5 +1,5 @@
 import { z, object, string, number, TypeOf } from "zod";
-import { SORT_OPTIONS } from "../enums/sort.enum";
+import { SORT_OPTIONS } from "../utils/enums";
 
 const intRegex = new RegExp(/^\d+$/);
 
@@ -36,8 +36,8 @@ const phoneRegex = new RegExp(
  *          type: string
  *          example: 123456
  *        barId:
- *          type: number
- *          example: 3
+ *          type: string
+ *          example: 6505c2012006d12aa825cda7
  *    CreateUserResponse:
  *      type: object
  *      properties:
@@ -65,7 +65,7 @@ const createUserSchema = object({
     email: string({
       required_error: "Email is required",
     }).email("Not a valid email"),
-    barId: number({
+    barId: string({
       required_error: "Bar ID required",
     }),
   }).refine((data) => data.password === data.passwordConfirmation, {
@@ -113,12 +113,12 @@ const updateProfileSchema = object({
  *    RateLawyerInput:
  *      type: object
  *      required:
- *        - rated_email
+ *        - rated_id
  *        - rating
  *      properties:
- *        rated_email:
+ *        rated_id:
  *          type: string
- *          example: test1@gmail.com
+ *          example: "6505e86b5f22c4e516ecd1b9"
  *        rating:
  *          type: integer
  *          minimum: 1
@@ -133,9 +133,9 @@ const updateProfileSchema = object({
  */
 const rateLawyerSchema = object({
   body: object({
-    rated_email: string({
-      required_error: "Rated email is required",
-    }).email("Not a valid rated email"),
+    rated_id: string({
+      required_error: "Rated lawyer's ID is required",
+    }),
     rating: number({
       required_error: "Rating is required",
     })
@@ -179,7 +179,7 @@ const rateLawyerSchema = object({
  *              lastname:
  *                type: string
  *              bar_id:
- *                type: integer
+ *                type: string
  *              lawyer_state:
  *                type: string
  *              average_rating:
@@ -188,25 +188,25 @@ const rateLawyerSchema = object({
  *            - email: john.doe@gmail.com
  *              firstname: john
  *              lastname: doe
- *              bar_id: 5
+ *              bar_id: 6505c2012006d12aa825cda7
  *              lawyer_state: FREE
  *              average_rating: 4.2
  *            - email: jane.doe@gmail.com
  *              firstname: jane
  *              lastname: doe
- *              bar_id: 3
+ *              bar_id: 6505c2012006d12aa825cda9
  *              lawyer_state: FREE
  *              average_rating: 3.5
  *            - email: lionel.messi@outlook.com
  *              firstname: lionel
  *              lastname: messi
- *              bar_id: 5
+ *              bar_id: 6505c2012006d12aa825cdaa
  *              lawyer_state: BUSY
  *              average_rating: 5
  *            - email: sabri.sarioglu@gmail.com
  *              firstname: sabri
  *              lastname: sarioglu
- *              bar_id: 2
+ *              bar_id: 6505c2012006d12aa825cda9
  *              lawyer_state: FREE
  *              average_rating: null
  *        currentPage:
@@ -223,10 +223,20 @@ const getLawyersSchema = object({
     availability: z.enum(["True", "False"]).optional(),
     minRating: string().min(1).max(5).optional(),
     maxRating: string().min(1).max(5).optional(),
-    barId: string().regex(intRegex).optional(),
+    barId: string().optional(),
     page: string().regex(intRegex).optional(),
     pageSize: string().regex(intRegex).optional(),
-  }),
+  }).refine(
+    (data) =>
+      (data.minRating === undefined ||
+        (parseFloat(data.minRating) <= 5 && parseFloat(data.minRating) >= 1)) &&
+      (data.maxRating === undefined ||
+        (parseFloat(data.maxRating) <= 5 && parseFloat(data.maxRating) >= 1)),
+    {
+      message: "minRating and maxRating should be between 1-5.",
+      path: ["passwordConfirmation"],
+    }
+  ),
 });
 
 /**
@@ -301,8 +311,8 @@ const getUserProfileSchema = object({
  *        - cityId
  *      properties:
  *        cityId:
- *          type: number
- *          example: 2
+ *          type: string
+ *          example: 6505c2012006d12aa825cda1
  */
 
 const getUserCitySchema = object({
@@ -313,7 +323,7 @@ const getUserCitySchema = object({
 
 const updateCityOfTheUserSchema = object({
   body: object({
-    cityId: number(),
+    cityId: string(),
   }),
 });
 

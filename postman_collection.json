@@ -1,928 +1,771 @@
 {
-	"info": {
-		"_postman_id": "7e12e611-cea3-4453-9ea3-70f3849cb29f",
-		"name": "Test Collection",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "16516256"
-	},
-	"item": [
-		{
-			"name": "Healthcheck",
-			"item": [
-				{
-					"name": "Healthcheck",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:1337/api/healthcheck",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"healthcheck"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Auth Routes",
-			"item": [
-				{
-					"name": "Login",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.collectionVariables.set(\"accessToken\", pm.response.json().accessToken);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"test1@gmail.com\",\n    \"password\": \"123456\"\n}\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:1337/api/auth/login",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"auth",
-								"login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Send Verification Email",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"alp.tuna.453@gmail.com\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:1337/api/auth/send-verification-email",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"auth",
-								"send-verification-email"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Refresh Token",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.collectionVariables.set(\"accessToken\", pm.response.json().accessToken);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:1337/api/auth/refresh-token",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"auth",
-								"refresh-token"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Verify Email",
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"alp.tuna.453@gmail.com\",\n    \"verificationCode\": \"7d10eadc-43a3-4cc5-88fa-b0bbbabe8837\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:1337/api/auth/verify-email",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"auth",
-								"verify-email"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Forgot Password",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"pm.collectionVariables.set(\"resetToken\", pm.response.json().resetToken);"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"alp.tuna.453@gmail.com\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:1337/api/auth/forgot-password",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"auth",
-								"forgot-password"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Reset Password",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"email\": \"alp.tuna.453@gmail.com\",\n    \"newPassword\": \"1234567\",\n    \"resetToken\": \"{{resetToken}}\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:1337/api/auth/reset-password",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"auth",
-								"reset-password"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Password",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"newPassword\": \"123456\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:1337/api/auth/update-password",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"auth",
-								"update-password"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "User Routes",
-			"item": [
-				{
-					"name": "Register",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									""
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"firstname\": \"test22name\",\n    \"lastname\": \"test22name\",\n    \"email\": \"test22@gmail.com\",\n    \"password\": \"123456\",\n    \"passwordConfirmation\": \"123456\",\n    \"barId\": 6\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:1337/api/user",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "User Profile",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:1337/api/user/:userEmail/profile",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"user",
-								":userEmail",
-								"profile"
-							],
-							"variable": [
-								{
-									"key": "userEmail",
-									"value": "alp.tuna.453@gmail.co"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update Profile",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"age\": 23,\n    \"phoneNumber\": \"+905314525631\",\n    \"linkedinUrl\": \"https://www.linkedin.com/in/alptuna/\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:1337/api/user/profile",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"user",
-								"profile"
-							],
-							"query": [
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								},
-								{
-									"key": "",
-									"value": null,
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "User's City",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \n}"
-						},
-						"url": {
-							"raw": "http://localhost:1337/api/user/:userEmail/city",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"user",
-								":userEmail",
-								"city"
-							],
-							"variable": [
-								{
-									"key": "userEmail",
-									"value": "alp.tuna.453@gmail.com"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Update User's City",
-					"request": {
-						"method": "PATCH",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"cityId\": 1\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:1337/api/user",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Rate Lawyer",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"rated_email\": \"test1@gmail.com\",\n    \"rating\": 5\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:1337/api/user/rate",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"user",
-								"rate"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Lawyers",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:1337/api/user",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"user"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Sort Lawyers",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:1337/api/user?&sort=ASC",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"user"
-							],
-							"query": [
-								{
-									"key": null,
-									"value": null
-								},
-								{
-									"key": "sort",
-									"value": "ASC"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Available Lawyers",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:1337/api/user?availability=True",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"user"
-							],
-							"query": [
-								{
-									"key": "availability",
-									"value": "True"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Available Lawyers With Rating Above",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:1337/api/user?availability=True&minRating=3&sort=ASC&barId=5",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"user"
-							],
-							"query": [
-								{
-									"key": "availability",
-									"value": "True"
-								},
-								{
-									"key": "minRating",
-									"value": "3"
-								},
-								{
-									"key": "sort",
-									"value": "ASC"
-								},
-								{
-									"key": "barId",
-									"value": "5"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Lawyers with Pagination",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:1337/api/user?page=5",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"user"
-							],
-							"query": [
-								{
-									"key": "availability",
-									"value": "True",
-									"disabled": true
-								},
-								{
-									"key": "minRating",
-									"value": "3",
-									"disabled": true
-								},
-								{
-									"key": "sort",
-									"value": "ASC",
-									"disabled": true
-								},
-								{
-									"key": "barId",
-									"value": "5",
-									"disabled": true
-								},
-								{
-									"key": "page",
-									"value": "5"
-								},
-								{
-									"key": "pageSize",
-									"value": "",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Location Routes",
-			"item": [
-				{
-					"name": "Cities",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:1337/api/city",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"city"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Bar Routes",
-			"item": [
-				{
-					"name": "Bars in a City",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:1337/api/bar?cityId=1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"bar"
-							],
-							"query": [
-								{
-									"key": "cityId",
-									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Job Routes",
-			"item": [
-				{
-					"name": "Create Job",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"jobDescription\": \"Test description\",\n    \"dueDate\": \"03-30-2000\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:1337/api/job",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"job"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Offer Routes",
-			"item": [
-				{
-					"name": "Make Offer",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"jobId\": \"610f84e0-3d02-11ee-a520-cbc5b06db6c2\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:1337/api/offer",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"offer"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Accept Offer",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"offerId\": \"0a231100-3d12-11ee-81e2-e50fbda9e8f0\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:1337/api/offer/accept",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"offer",
-								"accept"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Reject Offer",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n    \"offerId\": \"0a231100-3d12-11ee-81e2-e50fbda9e8f0\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:1337/api/offer/reject",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "1337",
-							"path": [
-								"api",
-								"offer",
-								"reject"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		}
-	],
-	"auth": {
-		"type": "bearer",
-		"bearer": [
-			{
-				"key": "token",
-				"value": "{{accessToken}}",
-				"type": "string"
-			}
-		]
-	},
-	"event": [
-		{
-			"listen": "prerequest",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		},
-		{
-			"listen": "test",
-			"script": {
-				"type": "text/javascript",
-				"exec": [
-					""
-				]
-			}
-		}
-	],
-	"variable": [
-		{
-			"key": "accessToken",
-			"value": ""
-		},
-		{
-			"key": "verificationCode",
-			"value": ""
-		},
-		{
-			"key": "resetToken",
-			"value": ""
-		}
-	]
+  "info": {
+    "_postman_id": "7e12e611-cea3-4453-9ea3-70f3849cb29f",
+    "name": "Test Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "16516256"
+  },
+  "item": [
+    {
+      "name": "Healthcheck",
+      "item": [
+        {
+          "name": "Healthcheck",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:1337/api/healthcheck",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "healthcheck"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth Routes",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"accessToken\", pm.response.json().accessToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"alp.tuna.453@gmail.com\",\n    \"password\": \"123456\"\n}\n",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1337/api/auth/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "auth", "login"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Send Verification Email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"alp.tuna.453@gmail.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1337/api/auth/send-verification-email",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "auth", "send-verification-email"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"accessToken\", pm.response.json().accessToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1337/api/auth/refresh-token",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "auth", "refresh-token"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Verify Email",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"alp.tuna.453@gmail.com\",\n    \"verificationCode\": \"7d10eadc-43a3-4cc5-88fa-b0bbbabe8837\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1337/api/auth/verify-email",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "auth", "verify-email"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Forgot Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.collectionVariables.set(\"resetToken\", pm.response.json().resetToken);"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"alp.tuna.453@gmail.com\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1337/api/auth/forgot-password",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "auth", "forgot-password"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reset Password",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"alp.tuna.453@gmail.com\",\n    \"newPassword\": \"1234567\",\n    \"resetToken\": \"{{resetToken}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1337/api/auth/reset-password",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "auth", "reset-password"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Password",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"newPassword\": \"123456\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1337/api/auth/update-password",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "auth", "update-password"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User Routes",
+      "item": [
+        {
+          "name": "Register",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [""],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"firstname\": \"test1\",\n    \"lastname\": \"test1\",\n    \"email\": \"test@gmail.com\",\n    \"password\": \"123456\",\n    \"passwordConfirmation\": \"123456\",\n    \"barId\": \"6505c2012006d12aa825cda7\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1337/api/user",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "user"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:1337/api/user/:userEmail/profile",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "user", ":userEmail", "profile"],
+              "variable": [
+                {
+                  "key": "userEmail",
+                  "value": "alp.tuna.453@gmail.com"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"age\": 23,\n    \"phoneNumber\": \"+905314525631\",\n    \"linkedinUrl\": \"https://www.linkedin.com/in/alptuna/\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1337/api/user/profile",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "user", "profile"],
+              "query": [
+                {
+                  "key": "",
+                  "value": null,
+                  "disabled": true
+                },
+                {
+                  "key": "",
+                  "value": null,
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User's City",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \n}"
+            },
+            "url": {
+              "raw": "http://localhost:1337/api/user/:userEmail/city",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "user", ":userEmail", "city"],
+              "variable": [
+                {
+                  "key": "userEmail",
+                  "value": "alp.tuna.453@gmail.com"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update User's City",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"cityId\": \"6505c1692006d12aa825cda0\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1337/api/user",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "user"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Rate Lawyer",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"rated_id\": \"6505e9f95f22c4e516ecd1c3\",\n    \"rating\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1337/api/user/rate",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "user", "rate"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lawyers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:1337/api/user",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "user"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Sort Lawyers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:1337/api/user?sort=ASC",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "user"],
+              "query": [
+                {
+                  "key": "sort",
+                  "value": "ASC"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Available Lawyers",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:1337/api/user?availability=False",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "user"],
+              "query": [
+                {
+                  "key": "availability",
+                  "value": "False"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Available Lawyers With Rating Above",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:1337/api/user?availability=True&sort=ASC&barId=6505c2cc2006d12aa825cdaa",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "user"],
+              "query": [
+                {
+                  "key": "availability",
+                  "value": "True"
+                },
+                {
+                  "key": "minRating",
+                  "value": "5",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "ASC"
+                },
+                {
+                  "key": "barId",
+                  "value": "6505c2cc2006d12aa825cdaa"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Lawyers with Pagination",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:1337/api/user?availability=True&sort=ASC&barId=6505c2cc2006d12aa825cdaa&page=3&pageSize=5",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "user"],
+              "query": [
+                {
+                  "key": "availability",
+                  "value": "True"
+                },
+                {
+                  "key": "minRating",
+                  "value": "3",
+                  "disabled": true
+                },
+                {
+                  "key": "sort",
+                  "value": "ASC"
+                },
+                {
+                  "key": "barId",
+                  "value": "6505c2cc2006d12aa825cdaa"
+                },
+                {
+                  "key": "page",
+                  "value": "3"
+                },
+                {
+                  "key": "pageSize",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Location Routes",
+      "item": [
+        {
+          "name": "Cities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:1337/api/city",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "city"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Bar Routes",
+      "item": [
+        {
+          "name": "Bars in a City",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:1337/api/bar?cityId=6505c1692006d12aa825cda0",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "bar"],
+              "query": [
+                {
+                  "key": "cityId",
+                  "value": "6505c1692006d12aa825cda0"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Job Routes",
+      "item": [
+        {
+          "name": "Create Job",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"jobDescription\": \"Test description\",\n    \"dueDate\": \"03-30-2000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1337/api/job",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "job"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Offer Routes",
+      "item": [
+        {
+          "name": "Make Offer",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"jobId\": \"6506fbe377b025de6f8d2ec9\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1337/api/offer",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "offer"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Accept Offer",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"offerId\": \"6506fc81fcc66641559c8fbe\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1337/api/offer/accept",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "offer", "accept"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Reject Offer",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"offerId\": \"6506fc81fcc66641559c8fbe\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:1337/api/offer/reject",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["api", "offer", "reject"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "verificationCode",
+      "value": ""
+    },
+    {
+      "key": "resetToken",
+      "value": ""
+    }
+  ]
 }

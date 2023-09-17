@@ -1,11 +1,11 @@
 import { Request, Response } from "express";
 import { jobService, offerService } from "../services";
-import { OFFER_STATE } from "../enums/offer.enum";
+import { OFFER_STATE } from "../utils/enums";
 
 export async function makeOffer(req: Request, res: Response) {
   try {
     const { jobId } = req.body;
-    const requester = res.locals.user.email;
+    const requester = res.locals.user.id;
 
     const jobExists = await jobService.jobExists(jobId);
     if (!jobExists) {
@@ -28,7 +28,7 @@ export async function makeOffer(req: Request, res: Response) {
 export async function acceptOffer(req: Request, res: Response) {
   try {
     const { offerId } = req.body;
-    const receiver = res.locals.user.email;
+    const receiver = res.locals.user.id;
 
     const offer = await offerService.getOffer(offerId);
 
@@ -38,7 +38,7 @@ export async function acceptOffer(req: Request, res: Response) {
         .json({ error: `Offer with id '${offerId}' could not found` });
     }
 
-    if (receiver !== offer.receiver) {
+    if (receiver !== offer.receiver.toString()) {
       return res
         .status(403)
         .json({ error: "You are not authorized to accept this offer" });
@@ -64,7 +64,7 @@ export async function acceptOffer(req: Request, res: Response) {
 export async function rejectOffer(req: Request, res: Response) {
   try {
     const { offerId } = req.body;
-    const receiver = res.locals.user.email;
+    const receiver = res.locals.user.id;
 
     const offer = await offerService.getOffer(offerId);
 
@@ -74,7 +74,7 @@ export async function rejectOffer(req: Request, res: Response) {
         .json({ error: `Offer with id '${offerId}' could not found` });
     }
 
-    if (receiver !== offer.receiver) {
+    if (receiver !== offer.receiver.toString()) {
       return res
         .status(403)
         .json({ error: "You are not authorized to reject this offer" });

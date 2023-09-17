@@ -12,7 +12,7 @@ export async function getBarsInTheCity(req: Request, res: Response) {
         .json({ error: `City with id '${cityId}' could not found` });
     }
 
-    const bars = await barService.getBars(cityId);
+    const bars = await locationService.getBars(cityId);
 
     return res.status(200).json({ bars: bars });
   } catch (e: any) {

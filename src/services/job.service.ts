@@ -1,10 +1,9 @@
-import Job from "../models/job.model";
+import { Job } from "../models/job.model";
+import { JOB_STATE } from "../utils/enums";
 
 export async function jobExists(jobId: string): Promise<boolean> {
   const job = await Job.findOne({
-    where: {
-      job_id: jobId,
-    },
+    _id: jobId,
   });
   return !!job;
 }
@@ -14,16 +13,14 @@ export async function setExecutor(
   executor: string,
   responseDate: Date
 ): Promise<void> {
-  await Job.update(
+  await Job.updateOne(
     {
-      executor,
-      job_status: "ongoing",
-      start_date: responseDate,
+      _id: jobId,
     },
     {
-      where: {
-        job_id: jobId,
-      },
+      executor: executor,
+      job_status: JOB_STATE.Ongoing,
+      start_date: responseDate,
     }
   );
 }

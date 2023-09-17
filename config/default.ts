@@ -1,6 +1,6 @@
 export default {
   port: 1337,
-  dbUri: "postgres://alptuna@localhost:5432/lawyer-app",
+  dbUri: "mongodb://localhost:27017/lawyer-app",
   accessTokenPrivateKey: "",
   refreshTokenPrivateKey: "",
   accessTokenExpiresIn: "15m",

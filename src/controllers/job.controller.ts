@@ -4,7 +4,7 @@ import { jobService } from "../services";
 export async function createJob(req: Request, res: Response) {
   try {
     const { jobDescription, dueDate } = req.body;
-    const requester = res.locals.user.email;
+    const requester = res.locals.user.id;
 
     await jobService.createJob(requester, jobDescription, dueDate);
 

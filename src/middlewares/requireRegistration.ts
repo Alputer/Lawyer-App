@@ -1,30 +1,37 @@
 import { Request, Response, NextFunction } from "express";
-import Lawyer from "../models/lawyer.model";
+import { Lawyer } from "../models/lawyer.model";
 
 interface MiddlewareOptions {
-  userEmailField: string;
+  userIdentifierField: string;
   place: string;
+  type: string;
 }
 
 export const requireRegistration =
-  ({ userEmailField, place }: MiddlewareOptions) =>
+  ({ userIdentifierField, place, type }: MiddlewareOptions) =>
   async (req: Request, res: Response, next: NextFunction) => {
-    let email: string;
+    let identifier: string;
 
     if (place === "body") {
-      email = req.body[userEmailField];
+      identifier = req.body[userIdentifierField];
     } else if (place === "params") {
-      email = req.params[userEmailField];
+      identifier = req.params[userIdentifierField];
     } else {
       return res.status(400).json({ error: "Invalid place specified" });
     }
 
     try {
-      const user = await Lawyer.findOne({
-        where: {
-          email: email,
-        },
-      });
+      let user;
+
+      if (type === "email") {
+        user = await Lawyer.findOne({
+          email: identifier,
+        });
+      } else if (type === "id") {
+        user = await Lawyer.findOne({
+          _id: identifier,
+        });
+      }
 
       if (!user) {
         return res.status(404).json({ error: "User not found" });

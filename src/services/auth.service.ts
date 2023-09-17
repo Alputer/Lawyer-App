@@ -1,5 +1,5 @@
 import bcrypt from "bcrypt";
-import Lawyer from "../models/lawyer.model";
+import { Lawyer } from "../models/lawyer.model";
 
 export const hashPassword = async (password: string): Promise<string> => {
   const saltRounds = 10;
@@ -20,16 +20,16 @@ export const changePassword = async (
 ): Promise<void> => {
   const hashedPassword = await hashPassword(newPassword);
 
-  await Lawyer.update({ password_hash: hashedPassword }, { where: { email } });
+  await Lawyer.updateOne({ email: email }, { password_hash: hashedPassword });
 };
 
 export const saveVerificationCode = async (input: {
   email: string;
   verificationCode: string;
 }): Promise<void> => {
-  await Lawyer.update(
-    { verification_code: input.verificationCode },
-    { where: { email: input.email } }
+  await Lawyer.updateOne(
+    { email: input.email },
+    { verification_code: input.verificationCode }
   );
 };
 
@@ -37,10 +37,7 @@ export const checkVerificationCode = async (
   email: string,
   verificationCode: string
 ): Promise<boolean> => {
-  const lawyer = await Lawyer.findOne({
-    attributes: ["verification_code"],
-    where: { email },
-  });
+  const lawyer = await Lawyer.findOne({ email: email }, "verification_code");
 
   if (!lawyer) {
     return false;
@@ -50,14 +47,11 @@ export const checkVerificationCode = async (
 };
 
 export const makeUserVerified = async (email: string): Promise<void> => {
-  await Lawyer.update({ is_validated: true }, { where: { email } });
+  await Lawyer.updateOne({ email: email }, { is_validated: true });
 };
 
 export const isValidated = async (email: string): Promise<boolean> => {
-  const lawyer = await Lawyer.findOne({
-    attributes: ["is_validated"],
-    where: { email },
-  });
+  const lawyer = await Lawyer.findOne({ email: email }, "is_validated");
 
   if (!lawyer) {
     return false;

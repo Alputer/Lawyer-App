@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
 import config from "config";
 import { LoginInput } from "../schemas/auth.schemas";
-import Lawyer from "../models/lawyer.model";
+import { Lawyer } from "../models/lawyer.model";
 const crypto = require("crypto");
 
 export function generateLoginTokens(payload: LoginInput): {
@@ -25,48 +25,46 @@ export async function generateAndSaveResetToken(email: string) {
   const tokenLength = 24;
   const resetToken = crypto.randomBytes(tokenLength).toString("hex");
 
-  const [updatedRowsCount] = await Lawyer.update(
-    { reset_token: resetToken },
+  const queryResult = await Lawyer.updateOne(
     {
-      where: {
-        email: email,
-      },
-    }
+      email: email,
+    },
+    { reset_token: resetToken }
   );
 
-  if (updatedRowsCount === 0) {
+  if (queryResult.modifiedCount === 0) {
     throw new Error("User not found");
   }
 
   return resetToken;
 }
 
-export async function getResetToken(email: string): Promise<string | null> {
-  const user = await Lawyer.findOne({
-    where: {
+export async function getResetToken(
+  email: string
+): Promise<string | null | undefined> {
+  const user = await Lawyer.findOne(
+    {
       email: email,
     },
-    attributes: ["reset_token"],
-  });
+    "reset_token"
+  );
 
   if (!user) {
     throw new Error("User not found");
   }
 
-  return user.reset_token;
+  return user?.reset_token;
 }
 
 export async function deleteResetToken(email: string): Promise<void> {
-  const [updatedRowsCount] = await Lawyer.update(
-    { reset_token: null },
+  const queryResult = await Lawyer.updateOne(
     {
-      where: {
-        email: email,
-      },
-    }
+      email: email,
+    },
+    { reset_token: null }
   );
 
-  if (updatedRowsCount === 0) {
+  if (queryResult.modifiedCount === 0) {
     throw new Error("User not found");
   }
 }

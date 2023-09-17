@@ -30,6 +30,7 @@ export async function login(req: Request, res: Response) {
     }
 
     const { accessToken, refreshToken } = tokenService.generateLoginTokens({
+      id: lawyer._id,
       email: body.email,
     });
 
@@ -103,7 +104,7 @@ export async function refreshToken(req: Request, res: Response) {
     if (req.cookies?.refreshToken) {
       // Destructuring refreshToken from cookie
       const refreshToken = req.cookies.refreshToken;
-      console.log("refreshToken: ", refreshToken);
+
       // Verifying refresh token
       const { decoded } = tokenService.verifyJwt(
         refreshToken,
@@ -116,7 +117,7 @@ export async function refreshToken(req: Request, res: Response) {
       }
 
       const accessToken = tokenService.signJwt(
-        decoded.email,
+        { id: decoded.id, email: decoded.email },
         "accessTokenPrivateKey"
       );
 

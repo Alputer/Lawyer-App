@@ -1,77 +1,35 @@
-import { DataTypes, Model } from "sequelize";
-import { sequelize } from "../utils/db";
-import { JOB_STATE } from "../enums/job.enum";
+import mongoose from "mongoose";
+import { JOB_STATE } from "../utils/enums";
 
-class Job extends Model {
-  job_id!: string;
-  executor!: string | null;
-  requester!: string;
-  job_description!: string;
-  job_status!: JOB_STATE;
-  create_date!: Date;
-  start_date!: Date | null;
-  due_date!: Date | null;
-  finish_date!: Date | null;
-}
-
-Job.init(
-  {
-    job_id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV1,
-      primaryKey: true,
-    },
-    executor: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-      references: {
-        model: "Lawyers",
-        key: "email",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "SET NULL",
-    },
-    requester: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
-      references: {
-        model: "Lawyers",
-        key: "email",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "CASCADE",
-    },
-    job_description: {
-      type: DataTypes.STRING(2048),
-      allowNull: false,
-    },
-    job_status: {
-      type: DataTypes.ENUM(...Object.values(JOB_STATE)),
-      allowNull: false,
-      defaultValue: JOB_STATE.NotStarted,
-    },
-    create_date: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    start_date: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    due_date: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
-    finish_date: {
-      type: DataTypes.DATE,
-      allowNull: true,
-    },
+const jobSchema = new mongoose.Schema({
+  executor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Lawyer",
   },
-  {
-    sequelize,
-    timestamps: true,
-    modelName: "Job",
-  }
-);
+  requester: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Lawyer",
+    required: true,
+  },
+  job_description: {
+    type: String,
+    required: true,
+  },
+  job_status: {
+    type: String,
+    enum: Object.values(JOB_STATE),
+    default: JOB_STATE.NotStarted,
+    required: true,
+  },
+  create_date: {
+    type: Date,
+    required: true,
+    immutable: true,
+    default: () => Date.now(),
+  },
+  start_date: Date,
+  due_date: Date,
+  finish_date: Date,
+});
 
-export default Job;
+export const Job = mongoose.model("Job", jobSchema);

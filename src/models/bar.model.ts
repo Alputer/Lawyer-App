@@ -1,38 +1,16 @@
-import { DataTypes, Model } from "sequelize";
-import { sequelize } from "../utils/db";
+import mongoose from "mongoose";
 
-class Bar extends Model {
-  bar_id!: number;
-  bar_name!: string;
-  city_id!: number;
-}
-
-Bar.init(
-  {
-    bar_id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    bar_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    city_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: "Cities",
-        key: "city_id",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "SET NULL",
-    },
+const barSchema = new mongoose.Schema({
+  bar_name: {
+    type: String,
+    required: true,
   },
-  {
-    sequelize,
-    timestamps: false,
-    modelName: "Bar",
-  }
-);
+  city_id: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "City", // Assuming you have a City model defined
+    // Note: MongoDB doesn't support onUpdate and onDelete behavior directly in the schema.
+    // You would need to handle these constraints in your application logic.
+  },
+});
 
-export default Bar;
+export const Bar = mongoose.model("Bar", barSchema);

@@ -1,28 +1,16 @@
-import { DataTypes, Model } from "sequelize";
-import { sequelize } from "../utils/db";
+import mongoose from "mongoose";
 
-class City extends Model {
-  city_id!: number;
-  city_name!: string;
-}
-
-City.init(
-  {
-    city_id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
-      primaryKey: true,
-    },
-    city_name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
+const citySchema = new mongoose.Schema({
+  city_name: {
+    type: String,
+    required: true,
   },
-  {
-    sequelize,
-    timestamps: false,
-    modelName: "City",
-  }
-);
+  bars: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Bar",
+    },
+  ],
+});
 
-export default City;
+export const City = mongoose.model("City", citySchema);

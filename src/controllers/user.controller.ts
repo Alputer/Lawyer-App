@@ -6,8 +6,7 @@ import {
   locationService,
 } from "../services";
 import { GetLawyersOptions } from "../models/lawyer.model";
-import { SORT_OPTIONS } from "../enums/sort.enum";
-import { LAWYER_STATE } from "../enums/lawyer.enum";
+import { SORT_OPTIONS, LAWYER_STATE } from "../utils/enums";
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -16,6 +15,7 @@ export async function register(req: Request, res: Response) {
 
   try {
     const verificationCode = uuidv4();
+
     const barExists = await barService.barExists(body.barId);
     if (!barExists) {
       return res
@@ -38,13 +38,13 @@ export async function register(req: Request, res: Response) {
       message: "User successfully created",
     });
   } catch (e: any) {
-    if (e.parent.code === "23505") {
+    if (e.code === 11000) {
       return res.status(409).json({
         message: "Account already exists",
       });
     }
-    console.log(e);
-    return res.status(500).send(e);
+
+    res.status(500).json({ error: "An internal server error occurred." });
   }
 }
 
@@ -54,8 +54,14 @@ export async function getLawyers(req: Request, res: Response) {
       req.query;
 
     if (barId) {
-      const barExists = await barService.barExists(barId);
-      if (!barExists) {
+      try {
+        const barExists = await barService.barExists(barId);
+        if (!barExists) {
+          return res
+            .status(404)
+            .json({ error: `Bar with id '${barId}' could not be found` });
+        }
+      } catch {
         return res
           .status(404)
           .json({ error: `Bar with id '${barId}' could not be found` });
@@ -63,7 +69,7 @@ export async function getLawyers(req: Request, res: Response) {
     }
 
     const options: GetLawyersOptions = {
-      barId: parseInt(barId as string),
+      barId: barId as string,
       lawyer_state:
         availability === undefined
           ? undefined
@@ -76,8 +82,6 @@ export async function getLawyers(req: Request, res: Response) {
       page: parseInt(page as string) || 1,
       pageSize: parseInt(pageSize as string) || 10,
     };
-
-    console.log("options: ", options);
 
     const { lawyers, totalCount } = await userService.getLawyers(options);
 
@@ -130,6 +134,7 @@ export async function getCityOfTheUser(req: Request, res: Response) {
     const { userEmail } = req.params;
 
     const user_location = await userService.getUserLocation(userEmail);
+
     if (!user_location) {
       return res.status(404).json({ error: "User has no registered city" });
     }
@@ -166,22 +171,23 @@ export async function updateCityOfTheUser(req: Request, res: Response) {
 
 export async function rateLawyer(req: Request, res: Response) {
   try {
-    const rater_email = res.locals.user.email;
-    const { rated_email, rating } = req.body;
+    const rater_id = res.locals.user.id;
+    const { rated_id, rating } = req.body;
 
-    if (rater_email === rated_email) {
+    if (rater_id === rated_id) {
       return res.status(403).json({
         message: "Lawyer cannot rate himself/herself",
       });
     }
 
-    await userService.rateLawyer(rater_email, rated_email, rating);
+    await userService.rateLawyer(rater_id, rated_id, rating);
 
     return res.status(200).json({
       message: "Lawyer is successfully rated",
     });
   } catch (e: any) {
-    if (e.parent.code === "23505") {
+    console.error("Error rating lawyer:", e);
+    if (e.code === 11000) {
       return res.status(409).json({
         message: "Rater lawyer already rated this lawyer",
       });

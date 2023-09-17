@@ -1,93 +1,96 @@
-import { Model, DataTypes } from "sequelize";
-import { sequelize } from "../utils/db";
-import { LAWYER_STATE } from "../enums/lawyer.enum";
-import City from "./city.model";
-import { SORT_OPTIONS } from "../enums/sort.enum";
+import mongoose from "mongoose";
+import { LAWYER_STATE, SORT_OPTIONS } from "../utils/enums";
 
-class Lawyer extends Model {
-  email!: string;
-  password_hash!: string;
-  firstname!: string;
-  lastname!: string;
-  bar_id!: number;
-  lawyer_state!: keyof typeof LAWYER_STATE;
-  average_rating!: number | null;
-  is_validated!: boolean;
-  verification_code!: string | null;
-  reset_token!: string | null;
-  last_location!: number | null;
-}
+const lawyerProfileSchema = new mongoose.Schema({
+  linkedin_url: {
+    type: String,
+    default: "N/A",
+  },
+  age: {
+    type: Number,
+    default: -1,
+  },
+  phone_number: {
+    type: String,
+    default: "N/A",
+  },
+});
 
-Lawyer.init(
+const ratingInfoSchema = new mongoose.Schema({
+  average_rating: {
+    type: Number,
+  },
+  total_number_of_votes: {
+    type: Number,
+  },
+});
+
+const lawyerSchema = new mongoose.Schema(
   {
     email: {
-      type: DataTypes.STRING(255),
-      primaryKey: true,
+      type: String,
+      required: true,
+      unique: true,
     },
     password_hash: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
+      type: String,
+      required: true,
     },
     firstname: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
+      type: String,
+      required: true,
     },
     lastname: {
-      type: DataTypes.STRING(255),
-      allowNull: false,
+      type: String,
+      required: true,
     },
     bar_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Bar",
+      required: true,
     },
     lawyer_state: {
-      type: DataTypes.ENUM(...Object.values(LAWYER_STATE)),
-      allowNull: false,
-      defaultValue: LAWYER_STATE.FREE,
-    },
-    average_rating: {
-      type: DataTypes.FLOAT,
-      allowNull: true,
+      type: String,
+      enum: Object.values(LAWYER_STATE),
+      required: true,
+      default: LAWYER_STATE.FREE,
     },
     is_validated: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-      defaultValue: false,
-    },
-    verification_code: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
-    },
-    reset_token: {
-      type: DataTypes.STRING(255),
-      allowNull: true,
+      type: Boolean,
+      required: true,
+      default: false,
     },
     last_location: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: "Cities",
-        key: "city_id",
-      },
-      onUpdate: "CASCADE",
-      onDelete: "SET NULL",
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "City",
     },
+    verification_code: String,
+    reset_token: String,
+    rating_info: {
+      type: ratingInfoSchema,
+      default: { average_rating: 0, total_number_of_votes: 0 },
+    },
+    lawyer_profile: lawyerProfileSchema,
+    jobs: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Job",
+      },
+    ],
+    offers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Job",
+      },
+    ],
   },
   {
-    sequelize,
-    modelName: "Lawyer",
     timestamps: true,
   }
 );
 
-Lawyer.belongsTo(City, { foreignKey: "last_location", as: "city" });
-
-export class LawyerWithCity extends Lawyer {
-  city!: City;
-}
-
 export interface GetLawyersOptions {
-  barId: number;
+  barId: string;
   lawyer_state: LAWYER_STATE | undefined;
   minRating: number;
   maxRating: number;
@@ -96,4 +99,18 @@ export interface GetLawyersOptions {
   pageSize: number;
 }
 
-export default Lawyer;
+export interface BasicLawyer {
+  email: String;
+  firstname: String;
+  lastname: String;
+  bar_id: number;
+  lawyer_state: LAWYER_STATE;
+  average_rating: number;
+}
+
+export interface RatingInfo {
+  average_rating: number;
+  total_number_of_votes: number;
+}
+
+export const Lawyer = mongoose.model("Lawyer", lawyerSchema);
